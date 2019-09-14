@@ -1,5 +1,3 @@
-using System;
-
 namespace Rubrical.Models
 {
     public class ErrorViewModel
