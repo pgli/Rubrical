@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,13 +7,18 @@ namespace Rubrical.Models
 {
     public class Rubric
     {
+        public Rubric()
+        {
+            Columns = new List<Column>();
+            Ratings = new List<Rating>();
+            DateCreated = DateTime.Now;
+            TotalRating = 0;
+            OwnerId = CreatedByUser.Id;
+        }
+
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public Guid Guid { get; set; }
-
-        [Required]
         public int OwnerId { get; set; }
 
         [Required]
@@ -30,9 +36,23 @@ namespace Rubrical.Models
         [Required]
         public int PrivacyId { get; set; }
 
-        [Required]
+        [ForeignKey("PrivacyId")]
+        public virtual Privacy Privacy { get; set; }
+
         public DateTime DateCreated { get; set; }
 
         public int? TotalRating { get; set; }
+
+        [Required]
+        public string ApplicationUserId { get; set; }
+
+        [ForeignKey("ApplicationUserId")]
+        public virtual ApplicationUser CreatedByUser { get; set; }
+
+        [Required]
+        public virtual List<Column> Columns { get; set; }
+
+        [Required]
+        public virtual List<Rating> Ratings { get; set; }
     }
 }
