@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rubrical.Data;
+using Rubrical.Models;
 
 namespace Rubrical
 {
@@ -33,11 +34,19 @@ namespace Rubrical
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+
+            services.AddDefaultIdentity<ApplicationUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddAuthentication()
+                .AddGoogle(options =>
+                {
+                    options.ClientId = "453363031628-ap1sbc5rq1o2r20a82fqvahhfvgj52nf.apps.googleusercontent.com";
+                    options.ClientSecret = "x0Qm8gKX0gn0QrzRle2UBmr8";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

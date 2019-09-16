@@ -13,13 +13,10 @@ namespace Rubrical.Models
             Ratings = new List<Rating>();
             DateCreated = DateTime.Now;
             TotalRating = 0;
-            OwnerId = CreatedByUser.Id;
         }
 
         [Key]
         public int Id { get; set; }
-
-        public int OwnerId { get; set; }
 
         [Required]
         public int SubjectId { get; set; }
@@ -43,16 +40,13 @@ namespace Rubrical.Models
 
         public int? TotalRating { get; set; }
 
-        [Required]
         public string ApplicationUserId { get; set; }
 
         [ForeignKey("ApplicationUserId")]
         public virtual ApplicationUser CreatedByUser { get; set; }
 
-        [Required]
         public virtual List<Column> Columns { get; set; }
 
-        [Required]
         public virtual List<Rating> Ratings { get; set; }
     }
 }

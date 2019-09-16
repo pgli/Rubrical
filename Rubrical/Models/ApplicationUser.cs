@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Rubrical.Models
 {
-    public class ApplicationUser : IdentityUser<int>
+    public class ApplicationUser : IdentityUser
     {
         public ApplicationUser()
         {
