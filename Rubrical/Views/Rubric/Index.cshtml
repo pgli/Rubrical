@@ -1,0 +1,23 @@
+﻿@model Rubrical.RubricModels.RubricIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div class="row">
+    @foreach (var rubric in Model.Rubrics)
+    {
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">@rubric.Title</h5>
+                    <p class="card-text">@(rubric.Description == null ? "No description." : rubric.Description)</p>
+                    <a href="/Rubric/RubricView?rubricId=@rubric.Id" class="btn btn-primary">View Rubric</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+

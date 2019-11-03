@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Rubrical.Data;
 using Rubrical.Models;
+using System;
+using System.Linq;
 
 namespace Rubrical
 {
@@ -50,12 +52,14 @@ namespace Rubrical
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
+
+                SeedData(serviceProvider);
             }
             else
             {
@@ -76,6 +80,33 @@ namespace Rubrical
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        public void SeedData(IServiceProvider serviceProvider)
+        {
+            var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
+            #region Mock Data
+            var subject1 = new Subject { SubjectName = "Chemistry", SubjectDescription = "The study of chemistry" };
+            var subject2 = new Subject { SubjectName = "Biology", SubjectDescription = "The study of biology" };
+            var subject3 = new Subject { SubjectName = "Physics", SubjectDescription = "The study of physics" };
+
+            var grade1 = new Grade { GradeName = "Grade 9 Applied", GradeDescription = "The applied level of grade 9." };
+            var grade2 = new Grade { GradeName = "Grade 10 Academic", GradeDescription = "The academic level of grade 9." };
+            var grade3 = new Grade { GradeName = "Grade 3" };
+            #endregion
+
+            if (!(db.Subjects.Where(x => x.SubjectName == subject1.SubjectName).Any()))
+            {
+                db.Subjects.Add(subject1);
+                db.Subjects.Add(subject2);
+                db.Subjects.Add(subject3);
+
+                db.Grades.Add(grade1);
+                db.Grades.Add(grade2);
+                db.Grades.Add(grade3);
+
+                db.SaveChanges();
+            }
         }
     }
 }

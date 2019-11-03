@@ -19,6 +19,11 @@ namespace Rubrical.Models
         public int Id { get; set; }
 
         [Required]
+        public string Title { get; set; }
+
+        public string Description { get; set; }
+
+        [Required]
         public int SubjectId { get; set; }
 
         [ForeignKey("SubjectId")]
@@ -30,15 +35,11 @@ namespace Rubrical.Models
         [ForeignKey("GradeId")]
         public virtual Grade Grade { get; set; }
 
-        [Required]
-        public int PrivacyId { get; set; }
-
-        [ForeignKey("PrivacyId")]
-        public virtual Privacy Privacy { get; set; }
-
         public DateTime DateCreated { get; set; }
 
         public int? TotalRating { get; set; }
+
+        public bool IsPrivate { get; set; }
 
         public string ApplicationUserId { get; set; }
 
