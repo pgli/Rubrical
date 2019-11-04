@@ -44,7 +44,7 @@ namespace Rubrical.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRubric(CreateRubricModel createRubricModel)
+        public async Task<IActionResult> CreateRubric(RubricCreateModel rubricCreateModel)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -52,11 +52,11 @@ namespace Rubrical.Controllers
             {
                 ApplicationUserId = currentUser.Id,
                 DateCreated = DateTime.Now,
-                Title = createRubricModel.Title,
-                Description = createRubricModel.Description,
-                GradeId = createRubricModel.Grade,
-                SubjectId = createRubricModel.Subject,
-                IsPrivate = createRubricModel.IsPrivate,
+                Title = rubricCreateModel.Title,
+                Description = rubricCreateModel.Description,
+                GradeId = rubricCreateModel.Grade,
+                SubjectId = rubricCreateModel.Subject,
+                IsPrivate = rubricCreateModel.IsPrivate,
                 TotalRating = 0
             };
 
@@ -76,6 +76,18 @@ namespace Rubrical.Controllers
             }
 
             return View(rubric);
+        }
+
+        public async Task<IActionResult> AddRow(Rubric rubric)
+        {
+
+            return RedirectToAction("RubricView", new { rubricId = rubric.Id } );
+        }
+
+        public async Task<IActionResult> AddColumn(Rubric rubric)
+        {
+
+            return RedirectToAction("RubricView", new { rubricId = rubric.Id });
         }
     }
 }

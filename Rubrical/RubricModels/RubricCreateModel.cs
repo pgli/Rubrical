@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Rubrical.RubricModels
 {
-    public class CreateRubricModel
+    public class RubricCreateModel
     {
         [Required]
         public string Title { get; set; }

@@ -7,4 +7,37 @@
 <h1>@Model.Title</h1>
 <h5>@Model.Description</h5>
 
+<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("AddRow", "Rubric", Model)'">Add Row</button>
+<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("AddColumn", "Rubric", Model)'">Add Column</button>
 
+@for (var i = 0; i < Model.Columns.Count; i++)
+{
+    if (i == 0)
+    {
+        <table class="table table-hover">
+            @for (var j = 0; j < Model.Columns[i].Cells.Count; j++)
+            {
+                <tr class="table-primary" id="row@j">
+                    <td>@Model.Columns[i].Cells[j].Text</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        @for (var j = 0; j < Model.Columns[i].Cells.Count; j++)
+        {
+            // append a <td> to each above row here
+        }
+    }
+}
+    @*@foreach (var column in Model.Columns)
+        {
+        <tr class="table-primary">
+        <th scope="row">test scope</th>
+            @foreach (var cell in column.Cells)
+            {
+                <td>"Hello World"</td>
+            }
+        </tr>
+        }*@
