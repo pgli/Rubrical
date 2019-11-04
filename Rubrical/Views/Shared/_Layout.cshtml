@@ -24,7 +24,10 @@
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Rubric" asp-action="Index">My Rubrics</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Rubric" asp-action="Create">Create a Rubric</a>
                         </li>
                     </ul>
                 </div>
@@ -32,7 +35,7 @@
         </nav>
     </header>
     <div class="container">
-        <partial name="_CookieConsentPartial" />
+        @*<partial name="_CookieConsentPartial" />*@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
