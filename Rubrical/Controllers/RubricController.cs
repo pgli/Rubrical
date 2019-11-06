@@ -47,7 +47,7 @@ namespace Rubrical.Controllers
         public async Task<IActionResult> CreateRubric(RubricCreateModel rubricCreateModel)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-
+            
             var rubric = new Rubric
             {
                 ApplicationUserId = currentUser.Id,
@@ -59,7 +59,13 @@ namespace Rubrical.Controllers
                 IsPrivate = rubricCreateModel.IsPrivate,
                 TotalRating = 0
             };
+            var newRow = new Row { Name = "newRubricRow", RubricId = rubric.Id };
+            Cell cell = new Cell { RowId = newRow.Id, Text = "newRubricCell" };
+            newRow.Cells.Add(cell);
+            rubric.Rows.Add(newRow);
 
+            _applicationDbContext.Cells.Add(cell);
+            _applicationDbContext.Rows.Add(newRow);
             _applicationDbContext.Rubrics.Add(rubric);
             await _applicationDbContext.SaveChangesAsync();
 
@@ -75,17 +81,62 @@ namespace Rubrical.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            rubric.Rows = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).Include("Cells").ToList();
+            
             return View(rubric);
         }
 
         public async Task<IActionResult> AddRow(Rubric rubric)
         {
+            var newRow = new Row { Name = "temp", RubricId = rubric.Id };
+            newRow.Cells = new List<Cell>();
+            //var cellsPerRow = _applicationDbContext.Rows.Where(x => x.RubricId == rubric.Id).Include(c => c.Cells).FirstOrDefault().Cells.Count();
+            var cellsPerRow = _applicationDbContext.Rows.Include(c => c.Cells).First(x => x.RubricId == rubric.Id).Cells.Count();
+
+            for (int i = 0; i < cellsPerRow; i++)
+            {
+                Cell cell = new Cell { RowId = newRow.Id, Text = $"row{rubric.Rows.Count()}" };
+                newRow.Cells.Add(cell);
+                _applicationDbContext.Cells.Add(cell);
+            }
+
+            _applicationDbContext.Rows.Add(newRow);
+            rubric.Rows.Add(newRow);
+            Rubric rubricToUpdate = _applicationDbContext.Rubrics.Where(r => r.Id == rubric.Id).FirstOrDefault();
+            if (rubricToUpdate != null)
+            {
+                _applicationDbContext.Rubrics.Update(rubricToUpdate);
+            }
+
+            await _applicationDbContext.SaveChangesAsync();
 
             return RedirectToAction("RubricView", new { rubricId = rubric.Id } );
         }
 
         public async Task<IActionResult> AddColumn(Rubric rubric)
         {
+            // goal is to add a blank cell to the end of all currently existing rows
+            // get all rows where rubric id matches
+            // add to Rows list
+            var rows = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).ToList();
+            var rowsPerRubric = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).Count(); // amount we need to loop through
+
+            // iterate over each row, adding new Cell object to the end
+            // for each original row, change then .Update
+            foreach (var row in rows)
+            {
+                Cell cell = new Cell { RowId = row.Id, Text = $"col{row.Cells.Count}" };
+                row.Cells.Add(cell);
+                _applicationDbContext.Cells.Add(cell);
+                _applicationDbContext.Rows.Update(row);
+            }
+
+            // rubric.Rows = newRows
+            // update rubric
+            // save db context
+            rubric.Rows = rows;
+            _applicationDbContext.Rubrics.Update(rubric);
+            _applicationDbContext.SaveChanges();
 
             return RedirectToAction("RubricView", new { rubricId = rubric.Id });
         }

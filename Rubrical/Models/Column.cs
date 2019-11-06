@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Rubrical.Models
 {
-    public class Column
+    public class Row
     {
-        public Column()
+        public Row()
         {
             Cells = new List<Cell>();
         }

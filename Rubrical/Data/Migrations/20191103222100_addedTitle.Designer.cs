@@ -204,7 +204,7 @@ namespace Rubrical.Data.Migrations
                     b.ToTable("Cells");
                 });
 
-            modelBuilder.Entity("Rubrical.Models.Column", b =>
+            modelBuilder.Entity("Rubrical.Models.Row", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -355,13 +355,13 @@ namespace Rubrical.Data.Migrations
 
             modelBuilder.Entity("Rubrical.Models.Cell", b =>
                 {
-                    b.HasOne("Rubrical.Models.Column", "Column")
+                    b.HasOne("Rubrical.Models.Row", "Row")
                         .WithMany("Cells")
                         .HasForeignKey("ColumnId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Rubrical.Models.Column", b =>
+            modelBuilder.Entity("Rubrical.Models.Row", b =>
                 {
                     b.HasOne("Rubrical.Models.Rubric", "Rubric")
                         .WithMany("Columns")

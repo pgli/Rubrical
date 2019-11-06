@@ -9,7 +9,7 @@ namespace Rubrical.Models
     {
         public Rubric()
         {
-            Columns = new List<Column>();
+            Rows = new List<Row>();
             Ratings = new List<Rating>();
             DateCreated = DateTime.Now;
             TotalRating = 0;
@@ -46,7 +46,7 @@ namespace Rubrical.Models
         [ForeignKey("ApplicationUserId")]
         public virtual ApplicationUser CreatedByUser { get; set; }
 
-        public virtual List<Column> Columns { get; set; }
+        public virtual List<Row> Rows { get; set; }
 
         public virtual List<Rating> Ratings { get; set; }
     }

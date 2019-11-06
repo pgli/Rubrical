@@ -16,9 +16,9 @@ namespace Rubrical.Models
         public string Text { get; set; }
 
         [Required]
-        public int ColumnId { get; set; }
+        public int RowId { get; set; }
 
-        [ForeignKey("ColumnId")]
-        public virtual Column Column { get; set; }
+        [ForeignKey("RowId")]
+        public virtual Row Row { get; set; }
     }
 }
