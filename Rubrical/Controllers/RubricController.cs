@@ -47,7 +47,7 @@ namespace Rubrical.Controllers
         public async Task<IActionResult> CreateRubric(RubricCreateModel rubricCreateModel)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            
+
             var rubric = new Rubric
             {
                 ApplicationUserId = currentUser.Id,
@@ -82,7 +82,16 @@ namespace Rubrical.Controllers
             }
 
             rubric.Rows = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).Include("Cells").ToList();
-            
+            if (rubric.ApplicationUserId == currentUser.Id)
+            {
+                ViewBag.IsOwner = true;
+            }
+            else
+            {
+                ViewBag.IsOwner = false;
+            }
+
+
             return View(rubric);
         }
 
@@ -110,7 +119,7 @@ namespace Rubrical.Controllers
 
             await _applicationDbContext.SaveChangesAsync();
 
-            return RedirectToAction("RubricView", new { rubricId = rubric.Id } );
+            return RedirectToAction("RubricView", new { rubricId = rubric.Id });
         }
 
         public async Task<IActionResult> AddColumn(Rubric rubric)
@@ -136,9 +145,16 @@ namespace Rubrical.Controllers
             // save db context
             rubric.Rows = rows;
             _applicationDbContext.Rubrics.Update(rubric);
-            _applicationDbContext.SaveChanges();
+            await _applicationDbContext.SaveChangesAsync();
 
             return RedirectToAction("RubricView", new { rubricId = rubric.Id });
+        }
+
+        [HttpPost]
+        public void SaveChanges([FromBody] string rows)
+        {
+            var json = rows;
+            return;
         }
     }
 }

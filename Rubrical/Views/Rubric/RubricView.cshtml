@@ -4,17 +4,35 @@
     ViewData["Title"] = Model.Title;
 }
 
+@section scripts {
+    <script src="~/js/rubric.js"></script>
+}
+
 <h1>@Model.Title</h1>
 <h5>@Model.Description</h5>
+
 <style>
     .table td, .table th {
         min-width: 100px;
     }
-</style>
-<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("AddRow", "Rubric", Model)'">Add Row</button>
-<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("AddColumn", "Rubric", Model)'">Add Column</button>
 
-<table class="table table-hover table-bordered">
+    #buttonAddRow, #buttonAddColumn, #buttonSaveChanges {
+        display: none;
+    }
+</style>
+
+@if (ViewBag.IsOwner == true)
+{
+    <button type="button" class="btn btn-warning" id="buttonEditContents"><i class="fa fa-pencil"></i> Edit</button>
+    <br />
+    <button type="button" class="btn btn-primary edit-toggle" id="buttonAddRow"><i class="fa fa-plus"></i> Add Row</button>
+    <button type="button" class="btn btn-primary edit-toggle" id="buttonAddColumn"><i class="fa fa-plus"></i> Add Column</button>
+    <br />
+    <button type="button" class="btn btn-success edit-toggle" id="buttonSaveChanges"><i class="fa fa-floppy-o"></i> Save Changes</button>
+    <br />
+}
+
+<table class="table table-hover table-bordered" id="rubric">
     @for (var i = 0; i < Model.Rows.Count; i++)
     {
         <tr class="table-primary">
