@@ -8,19 +8,10 @@ using System.Threading.Tasks;
 
 namespace Rubrical.Models
 {
-    public class Cell
+    public class RowViewModel
     {
-        [Key]
         public int Id { get; set; }
-
-        [Required]
-        public string Text { get; set; }
-
-        [Required]
-        public int RowId { get; set; }
-
-        [ForeignKey("RowId")]
-        [JsonIgnore]
-        public virtual Row Row { get; set; }
+        public string Name { get; set; }
+        public List<Cell> Cells { get; set; }
     }
 }

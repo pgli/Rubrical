@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -59,7 +60,7 @@ namespace Rubrical.Controllers
                 IsPrivate = rubricCreateModel.IsPrivate,
                 TotalRating = 0
             };
-            var newRow = new Row { Name = "newRubricRow", RubricId = rubric.Id };
+            var newRow = new Row { RubricId = rubric.Id };
             Cell cell = new Cell { RowId = newRow.Id, Text = "newRubricCell" };
             newRow.Cells.Add(cell);
             rubric.Rows.Add(newRow);
@@ -75,7 +76,7 @@ namespace Rubrical.Controllers
         public async Task<IActionResult> RubricView(int rubricId)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var rubric = await _applicationDbContext.Rubrics.FirstOrDefaultAsync(x => x.Id == rubricId);
+            var rubric = await _applicationDbContext.Rubrics.SingleOrDefaultAsync(x => x.Id == rubricId);
             if (rubric == null || (rubric.IsPrivate && rubric.ApplicationUserId != currentUser.Id))
             {
                 return RedirectToAction("Index", "Home");
@@ -91,70 +92,99 @@ namespace Rubrical.Controllers
                 ViewBag.IsOwner = false;
             }
 
-
+            ViewBag.RubricId = rubric.Id;
             return View(rubric);
         }
 
-        public async Task<IActionResult> AddRow(Rubric rubric)
+        [HttpPost]
+        public async Task<IActionResult> AddRow([FromBody] Row data)
         {
-            var newRow = new Row { Name = "temp", RubricId = rubric.Id };
-            newRow.Cells = new List<Cell>();
-            //var cellsPerRow = _applicationDbContext.Rows.Where(x => x.RubricId == rubric.Id).Include(c => c.Cells).FirstOrDefault().Cells.Count();
-            var cellsPerRow = _applicationDbContext.Rows.Include(c => c.Cells).First(x => x.RubricId == rubric.Id).Cells.Count();
+            var rubric = await _applicationDbContext.Rubrics.SingleOrDefaultAsync(r => r.Id == data.RubricId);
+            if (rubric == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Rubric not found.");
+            }
 
+            var newRow = new Row { RubricId = rubric.Id };
+
+            _applicationDbContext.Rows.Add(newRow);
+            await _applicationDbContext.SaveChangesAsync();
+
+            var cellsPerRow = _applicationDbContext.Rows.Include(c => c.Cells).First(x => x.RubricId == rubric.Id).Cells.Count();
             for (int i = 0; i < cellsPerRow; i++)
             {
-                Cell cell = new Cell { RowId = newRow.Id, Text = $"row{rubric.Rows.Count()}" };
+                Cell cell = new Cell { RowId = newRow.Id, Text = "" };
                 newRow.Cells.Add(cell);
                 _applicationDbContext.Cells.Add(cell);
             }
 
-            _applicationDbContext.Rows.Add(newRow);
-            rubric.Rows.Add(newRow);
-            Rubric rubricToUpdate = _applicationDbContext.Rubrics.Where(r => r.Id == rubric.Id).FirstOrDefault();
-            if (rubricToUpdate != null)
-            {
-                _applicationDbContext.Rubrics.Update(rubricToUpdate);
-            }
-
             await _applicationDbContext.SaveChangesAsync();
-
-            return RedirectToAction("RubricView", new { rubricId = rubric.Id });
-        }
-
-        public async Task<IActionResult> AddColumn(Rubric rubric)
-        {
-            // goal is to add a blank cell to the end of all currently existing rows
-            // get all rows where rubric id matches
-            // add to Rows list
-            var rows = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).ToList();
-            var rowsPerRubric = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).Count(); // amount we need to loop through
-
-            // iterate over each row, adding new Cell object to the end
-            // for each original row, change then .Update
-            foreach (var row in rows)
-            {
-                Cell cell = new Cell { RowId = row.Id, Text = $"col{row.Cells.Count}" };
-                row.Cells.Add(cell);
-                _applicationDbContext.Cells.Add(cell);
-                _applicationDbContext.Rows.Update(row);
-            }
-
-            // rubric.Rows = newRows
-            // update rubric
-            // save db context
-            rubric.Rows = rows;
-            _applicationDbContext.Rubrics.Update(rubric);
-            await _applicationDbContext.SaveChangesAsync();
-
-            return RedirectToAction("RubricView", new { rubricId = rubric.Id });
+            return Json(new RowViewModel { Id = newRow.Id, Cells = newRow.Cells });
         }
 
         [HttpPost]
-        public void SaveChanges([FromBody] string rows)
+        public async Task<IActionResult> AddColumn([FromBody] CellEditModel cellEditModel)
         {
-            var json = rows;
-            return;
+            var rubric = await _applicationDbContext.Rubrics.Include(r => r.Rows).SingleOrDefaultAsync(x => x.Id == cellEditModel.RubricId);
+            var currentUser = await _userManager.GetUserAsync(User);
+            var isOwner = await _applicationDbContext.Rubrics.Where(x => x.ApplicationUserId == currentUser.Id && x.Id == cellEditModel.RubricId).AnyAsync();
+            if (!isOwner)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Insufficient permissions.");
+            }
+
+            var cellIds = new List<int>();
+            foreach (var row in rubric.Rows)
+            {
+                Cell cell = new Cell { RowId = row.Id, Text = "" };
+                row.Cells.Add(cell);
+
+                await _applicationDbContext.SaveChangesAsync();
+                cellIds.Add(cell.Id);
+            }
+
+            return Json(cellIds);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCell([FromBody] CellEditModel cellEditModel)
+        {
+            var rubric = await _applicationDbContext.Rubrics.SingleOrDefaultAsync(r => r.Id == cellEditModel.RubricId);
+            if (rubric == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Rubric not found.");
+            }
+
+            var cell = await _applicationDbContext.Cells.Include(r => r.Row).SingleOrDefaultAsync(c => c.Id == cellEditModel.CellId);
+            if (cell == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Cell not found.");
+            }
+
+            var row = await _applicationDbContext.Rows.Include(r => r.Rubric).SingleOrDefaultAsync(r => r.Id == cell.RowId);
+            if (row == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Row not found.");
+            }
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            var isOwner = await _applicationDbContext.Rubrics.Where(x => x.ApplicationUserId == currentUser.Id && x.Id == row.RubricId).AnyAsync();
+
+            if (!isOwner)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Insufficient permissions.");
+            }
+
+            cell.Text = cellEditModel.Text;
+
+            await _applicationDbContext.SaveChangesAsync();
+            return Json("Successfully edited.");
         }
     }
 }

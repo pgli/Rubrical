@@ -2,19 +2,46 @@
 
 $("#buttonAddRow").on("click", function () {
     if (isEditMode) {
-        var emptyCells = "";
-        for (var i = 0; i < $("#rubric")[0].rows[0].cells.length; i++) {
-            emptyCells += "<td contenteditable=true></td>";
-        }
-        var newRow = "<tr class='table-primary'>" + emptyCells + "</tr>";
-        $("#rubric tbody").append(newRow);
+        $.ajax({
+            type: "POST",
+            url: "/Rubric/AddRow",
+            data: JSON.stringify({ RubricId: modelData.Id }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log(data);
+                var emptyCells = "";
+                for (var i = 0; i < data.cells.length; i++) {
+                    var cell = data.cells[i];
+                    emptyCells += `<td data-cell-id='${cell.id}' name='cell' contenteditable=true></td>`;
+                }
+                var newRow = `<tr data-row-id='${data.id}' class='table-primary'>${emptyCells}</tr>`;
+                $("#rubric tbody").append(newRow);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
     }
 });
 
 $("#buttonAddColumn").on("click", function () {
     if (isEditMode) {
-        $("#rubric").find("tr").each(function () {
-            $(this).append("<td contenteditable=true></td>");
+        $.ajax({
+            type: "POST",
+            url: "/Rubric/AddColumn",
+            data: JSON.stringify({ RubricId: modelData.Id }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log(data);
+                $("#rubric").find("tr").each(function (index) {
+                    $(this).append(`<td contenteditable=true name='cell' data-cell-id='${data[index]}'></td>`);
+                });
+            },
+            error: function (data) {
+                console.log(data);
+            }
         });
     }
 });
@@ -23,36 +50,31 @@ $("#buttonEditContents").on("click", function () {
     toggleEditMode();
 });
 
-$("#buttonSaveChanges").on("click", function () {
-    var myRows = [];
-    var rows = $("#rubric tr").each(function (index) {
-        cells = $(this).find("td");
-        myRows[index] = {};
-        cells.each(function (cellIndex) {
-            myRows[index][cellIndex] = $(this).html();
-        });
-    });
-
-    var rubricInfo = {};
-    rubricInfo.rows = myRows;
-
-    console.log(`rubricInfo: ${rubricInfo}`);
-    console.log(`rubricInfo stringifiy: ${JSON.stringify(rubricInfo)}`);
+$("body").on("focusout", "[name=cell]", function () {
+    var rubricId = modelData.Id;
+    var element = $(this);
+    var rowId = element.parent().attr("data-row-id");
+    var cellId = element.attr("data-cell-id");
+    var text = element.text();
 
     $.ajax({
         type: "POST",
-        url: "/Rubric/SaveChanges",
-        data: JSON.stringify({rows: rubricInfo}), 
-        //data: rubricInfo,
+        url: "/Rubric/EditCell",
+        data: JSON.stringify({ rubricId: rubricId, rowId: rowId, cellId: cellId, text: text }),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        success: function () {
-            toggleEditMode();
+        success: function (data) {
+            console.log(data);
         }
     });
-
-
 });
+
+
+
+
+
+
+
 
 function toggleEditMode() {
     if (isEditMode) {

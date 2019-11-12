@@ -1,10 +1,14 @@
 ﻿@model Rubrical.Models.Rubric
+@using Newtonsoft.Json
 
 @{
     ViewData["Title"] = Model.Title;
 }
 
 @section scripts {
+    <script>
+        var modelData = @Html.Raw(JsonConvert.SerializeObject(Model));
+    </script>
     <script src="~/js/rubric.js"></script>
 }
 
@@ -33,12 +37,12 @@
 }
 
 <table class="table table-hover table-bordered" id="rubric">
-    @for (var i = 0; i < Model.Rows.Count; i++)
+    @foreach (var row in Model.Rows.OrderBy(r => r.Id))
     {
-        <tr class="table-primary">
-            @for (var j = 0; j < Model.Rows[i].Cells.Count; j++)
+        <tr class="table-primary" data-row-id="@row.Id">
+            @foreach (var cell in row.Cells.OrderBy(c => c.Id))
             {
-                <td>@Model.Rows[i].Cells[j].Text</td>
+                <td data-cell-id="@cell.Id" name="cell">@cell.Text</td>
             }
         </tr>
     }

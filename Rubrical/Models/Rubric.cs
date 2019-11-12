@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,12 +27,14 @@ namespace Rubrical.Models
         [Required]
         public int SubjectId { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("SubjectId")]
         public virtual Subject Subject { get; set; }
 
         [Required]
         public int GradeId { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("GradeId")]
         public virtual Grade Grade { get; set; }
 
@@ -43,11 +46,14 @@ namespace Rubrical.Models
 
         public string ApplicationUserId { get; set; }
 
+        [JsonIgnore]
         [ForeignKey("ApplicationUserId")]
         public virtual ApplicationUser CreatedByUser { get; set; }
 
+        [JsonIgnore]
         public virtual List<Row> Rows { get; set; }
 
+        [JsonIgnore]
         public virtual List<Rating> Ratings { get; set; }
     }
 }
