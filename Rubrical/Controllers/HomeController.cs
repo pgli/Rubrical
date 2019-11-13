@@ -10,22 +10,10 @@ using System.Threading.Tasks;
 
 namespace Rubrical.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
-        private ApplicationDbContext _applicationDbContext;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public HomeController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager) : base()
+        public IActionResult Index()
         {
-            _applicationDbContext = applicationDbContext;
-            _userManager = userManager;
-        }
-
-        public async Task<IActionResult> Index()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            var userContent = _applicationDbContext.Users.Include(u => u.Rubrics).Where(u => u.Id == user.Id).First();
             return View();
         }
 

@@ -1,0 +1,44 @@
+﻿@model Rubrical.CommunityModels.CommunityIndexViewModel
+
+@{
+    ViewData["Title"] = "Community Rubrics";
+}
+
+<h1>Community Rubrics</h1>
+
+<div class="row">
+    <div class="col-3">
+        @foreach (var subject in Model.Subjects)
+        {
+            <p>@subject.SubjectName</p>
+        }
+        <hr />
+        @foreach (var grade in Model.Grades)
+        {
+            <p>@grade.GradeName</p>
+        }
+    </div>
+    <div class="col-9">
+        <div class="row">
+            @foreach (var rubric in Model.Rubrics)
+            {
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            @*<div class="thumbnail-container">
+                                    <div class="thumbnail">
+                                        <iframe src="@Url.Action("RubricView", "Rubric", new { rubricId = rubric.Id })" frameborder="0"></iframe>
+                                    </div>
+                                </div>*@
+                            <h5 class="card-title">@rubric.Title</h5>
+                            <p class="card-text">@(rubric.Description == null ? "No description." : rubric.Description)</p>
+                            <a href="/Rubric/RubricView?rubricId=@rubric.Id" class="btn btn-primary">View Rubric</a>
+                            <br />
+                            <small>Created by @rubric.ApplicationUserId on @rubric.DateCreated</small>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

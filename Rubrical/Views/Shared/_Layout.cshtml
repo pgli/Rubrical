@@ -35,7 +35,7 @@
                 </div>
             </nav>*@
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="#"><img src="~/img/rubrical.png" alt="Rubrical"/></a>
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index"><img src="~/img/rubrical.png" alt="Rubrical"/></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -56,7 +56,7 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container-fluid">
         @*<partial name="_CookieConsentPartial" />*@
         <main role="main" class="pb-3">
             @RenderBody()
