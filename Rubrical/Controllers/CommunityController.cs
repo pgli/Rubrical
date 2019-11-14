@@ -36,19 +36,90 @@ namespace Rubrical.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> FilterByGrade([FromBody] CommunityIndexViewModel filterModel)
+        public async Task<IActionResult> FilterRubrics([FromBody] CommunityIndexViewModel filterModel)
         {
+            var publicUserRubrics = new List<Rubric>();
+            List<CommunityFilteredViewModel> communityFilteredViewModel = null;
+
             if (filterModel.FilterGradeId > 0)
             {
-                var publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.GradeId == filterModel.FilterGradeId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
-                var indexVM = new CommunityIndexViewModel { Rubrics = publicUserRubrics, Subjects = filterModel.Subjects, Grades = filterModel.Grades, FilterGradeId = filterModel.FilterGradeId, FilterSubjectId = filterModel.FilterSubjectId };
+                if (filterModel.FilterSubjectId > 0)
+                {
+                    // filter by both Grade and Subject
+                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.GradeId == filterModel.FilterGradeId && x.SubjectId == filterModel.FilterSubjectId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+                }
+                else
+                {
+                    // filter by Grade only
+                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.GradeId == filterModel.FilterGradeId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+                }
 
-                var json = Json(indexVM);
-                return Json(indexVM);
+                communityFilteredViewModel = new List<CommunityFilteredViewModel>();
+
+                foreach (var rubric in publicUserRubrics)
+                {
+                    communityFilteredViewModel.Add(new CommunityFilteredViewModel
+                    {
+                        RubricId = rubric.Id,
+                        UserName = rubric.CreatedByUser.UserName,
+                        DateCreated = rubric.DateCreated,
+                        Grade = rubric.Grade,
+                        Subject = rubric.Subject,
+                        Title = rubric.Title,
+                        Description = rubric.Description,
+                        TotalRating = rubric.TotalRating
+                    });
+                }
+
+                return Json(communityFilteredViewModel);
+            }
+            else
+            {
+                if (filterModel.FilterSubjectId > 0)
+                {
+                    // filter by Subject only
+                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.SubjectId == filterModel.FilterSubjectId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+
+                    communityFilteredViewModel = new List<CommunityFilteredViewModel>();
+
+                    foreach (var rubric in publicUserRubrics)
+                    {
+                        communityFilteredViewModel.Add(new CommunityFilteredViewModel
+                        {
+                            RubricId = rubric.Id,
+                            UserName = rubric.CreatedByUser.UserName,
+                            DateCreated = rubric.DateCreated,
+                            Grade = rubric.Grade,
+                            Subject = rubric.Subject,
+                            Title = rubric.Title,
+                            Description = rubric.Description,
+                            TotalRating = rubric.TotalRating
+                        });
+                    }
+
+                    return Json(communityFilteredViewModel);
+                }
             }
 
-            Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            return Json("Error filtering grade.");
+            publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+            communityFilteredViewModel = new List<CommunityFilteredViewModel>();
+
+            foreach (var rubric in publicUserRubrics)
+            {
+                communityFilteredViewModel.Add(new CommunityFilteredViewModel
+                {
+                    RubricId = rubric.Id,
+                    UserName = rubric.CreatedByUser.UserName,
+                    DateCreated = rubric.DateCreated,
+                    Grade = rubric.Grade,
+                    Subject = rubric.Subject,
+                    Title = rubric.Title,
+                    Description = rubric.Description,
+                    TotalRating = rubric.TotalRating
+                });
+            }
+
+            return Json(communityFilteredViewModel);
         }
     }
 }
