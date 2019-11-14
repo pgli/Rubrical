@@ -20,19 +20,14 @@
         min-width: 100px;
     }
 
-    #buttonAddRow, #buttonAddColumn, #buttonSaveChanges {
+    #buttonAddRow, #buttonAddColumn, #buttonSaveChanges, #selectPrivacy {
         display: none;
     }
-</style>
 
-@if (ViewBag.IsOwner == true)
-{
-    <button type="button" class="btn btn-warning" id="buttonEditContents"><i class="fa fa-pencil"></i> Edit</button>
-    <hr />
-    <button type="button" class="btn btn-primary edit-toggle" id="buttonAddRow"><i class="fa fa-plus"></i> Add Row</button>
-    <button type="button" class="btn btn-primary edit-toggle" id="buttonAddColumn"><i class="fa fa-plus"></i> Add Column</button>
-    <hr />
-}
+    #selectPrivacy {
+        width: 100px;
+    }
+</style>
 
 <table class="table table-hover table-bordered" id="rubric">
     @foreach (var row in Model.Rows.OrderBy(r => r.Id))
@@ -45,3 +40,25 @@
         </tr>
     }
 </table>
+
+@if (ViewBag.IsOwner == true)
+{
+    <button type="button" class="btn btn-warning" id="buttonEditContents"><i class="fa fa-pencil"></i> Edit</button>
+    <hr />
+    <button type="button" class="btn btn-primary edit-toggle" id="buttonAddRow"><i class="fa fa-plus"></i> Add Row</button>
+    <button type="button" class="btn btn-primary edit-toggle" id="buttonAddColumn"><i class="fa fa-plus"></i> Add Column</button>
+    <hr />
+    <select class="custom-select edit-toggle" id="selectPrivacy">
+        @if (Model.IsPrivate)
+        {
+            <option value="1" selected>Private</option>
+            <option value="0">Public</option>
+        }
+        else
+        {
+            <option value="0" selected>Public</option>
+            <option value="1">Private</option>
+        }
+    </select>
+    <hr />
+}

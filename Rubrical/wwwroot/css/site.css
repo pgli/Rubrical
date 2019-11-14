@@ -118,6 +118,10 @@ nav div ul li {
     margin: 10px;
 }
 
+h1 {
+    text-align: center;
+}
+
 /*.thumbnail iframe {
     width: 1440px;
     height: 900px;

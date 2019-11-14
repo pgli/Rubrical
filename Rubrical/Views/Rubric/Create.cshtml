@@ -4,50 +4,65 @@
     ViewData["Title"] = "Create A Rubric";
 }
 
+<style>
+    .row, .col-sm-6, form {
+        margin: 0 auto;
+    }
+
+    h1, form .btn {
+        text-align: center;
+    }
+</style>
+
 <h1>Create A Rubric</h1>
 
-<form action="/Rubric/CreateRubric" method="post">
-    <div class="form-group">
-        <label for="title">Title</label><br />
-        <input class="form-control" type="text" name="title" required />
+<div class="row">
+    <div class="col-sm-6">
+        <form action="/Rubric/CreateRubric" method="post">
+            <div class="form-group">
+                <label for="title">Title</label><br />
+                <input class="form-control" type="text" name="title" required />
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label><br />
+                <input class="form-control" type="text" name="description" required />
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <select class="form-control" id="subject" name="subject" required>
+                    <option></option>
+
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        <option value="@subject.Id">@subject.SubjectName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="grade">Grade</label>
+                <select class="form-control" id="grade" name="grade" required>
+                    <option></option>
+
+                    @foreach (var grade in Model.Grades)
+                    {
+                        <option value="@grade.Id">@grade.GradeName</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="IsPrivate">Privacy</label>
+                <select class="form-control" id="IsPrivate" name="IsPrivate" required>
+                    <option value="true">Private</option>
+                    <option value="false">Public</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
     </div>
+</div>
 
-    <div class="form-group">
-        <label for="description">Description</label><br />
-        <input class="form-control" type="text" name="description" required />
-    </div>
-
-    <div class="form-group">
-        <label for="subject">Subject</label>
-        <select class="form-control" id="subject" name="subject" required>
-            <option></option>
-
-            @foreach (var subject in Model.Subjects)
-            {
-                <option value="@subject.Id">@subject.SubjectName</option>
-            }
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="grade">Grade</label>
-        <select class="form-control" id="grade" name="grade" required>
-            <option></option>
-
-            @foreach (var grade in Model.Grades)
-            {
-                <option value="@grade.Id">@grade.GradeName</option>
-            }
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="IsPrivate">Privacy</label>
-        <select class="form-control" id="IsPrivate" name="IsPrivate" required>
-            <option value="true">Private</option>
-            <option value="false">Public</option>
-        </select>
-    </div>
-
-    <button type="submit" class="btn btn-default">Submit</button>
-</form>

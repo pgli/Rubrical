@@ -38,8 +38,8 @@ namespace Rubrical.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var subjects = await _applicationDbContext.Subjects.ToListAsync();
-            var grades = await _applicationDbContext.Grades.ToListAsync();
+            var subjects = await _applicationDbContext.Subjects.OrderBy(s => s.SubjectName).ToListAsync();
+            var grades = await _applicationDbContext.Grades.OrderBy(g => g.GradeName).ToListAsync();
 
             return View(new RubricViewModel { Subjects = subjects, Grades = grades });
         }
@@ -185,6 +185,39 @@ namespace Rubrical.Controllers
 
             await _applicationDbContext.SaveChangesAsync();
             return Json("Successfully edited.");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPrivacy([FromBody] PrivacyEditModel privacyEditModel)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var isOwner = await _applicationDbContext.Rubrics.Where(x => x.ApplicationUserId == currentUser.Id && x.Id == privacyEditModel.RubricId).AnyAsync();
+
+            if (!isOwner)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Insufficient permissions.");
+            }
+
+            var rubric = await _applicationDbContext.Rubrics.SingleOrDefaultAsync(r => r.Id == privacyEditModel.RubricId);
+            if (rubric == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Rubric not found.");
+            }
+
+            if (privacyEditModel.SelectedPrivacy == 0)
+            {
+                rubric.IsPrivate = false;
+                await _applicationDbContext.SaveChangesAsync();
+                return Json("Successfully changed privacy.");
+            }
+            else
+            {
+                rubric.IsPrivate = true;
+                await _applicationDbContext.SaveChangesAsync();
+                return Json("Successfully changed privacy.");
+            }
         }
     }
 }

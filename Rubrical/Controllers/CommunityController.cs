@@ -25,7 +25,7 @@ namespace Rubrical.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).ToListAsync();
+            var publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).Include(y => y.CreatedByUser).ToListAsync();
             var allSubjects = await _applicationDbContext.Subjects.OrderBy(s => s.SubjectName).ToListAsync();
             var allGrades = await _applicationDbContext.Grades.OrderBy(g => g.GradeName).ToListAsync();
 

@@ -34,7 +34,7 @@
                             <p class="card-text">@(rubric.Description == null ? "No description." : rubric.Description)</p>
                             <a href="/Rubric/RubricView?rubricId=@rubric.Id" class="btn btn-primary">View Rubric</a>
                             <br />
-                            <small>Created by @rubric.ApplicationUserId on @rubric.DateCreated</small>
+                            <small>Created by @rubric.CreatedByUser.UserName on @rubric.DateCreated</small>
                         </div>
                     </div>
                 </div>

@@ -46,6 +46,25 @@ $("#buttonAddColumn").on("click", function () {
     }
 });
 
+$("#selectPrivacy").on("change", function () {
+    if (isEditMode) {
+        $.ajax({
+            type: "POST",
+            url: "/Rubric/EditPrivacy",
+            data: JSON.stringify({ RubricId: modelData.Id, SelectedPrivacy: $("#selectPrivacy").val() }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log(data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+});
+
+
 $("#buttonEditContents").on("click", function () {
     toggleEditMode();
 });
@@ -68,10 +87,6 @@ $("body").on("focusout", "[name=cell]", function () {
         }
     });
 });
-
-
-
-
 
 
 
