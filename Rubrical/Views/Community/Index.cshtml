@@ -1,28 +1,74 @@
 ﻿@model Rubrical.CommunityModels.CommunityIndexViewModel
+@using Newtonsoft.Json
 
 @{
     ViewData["Title"] = "Community Rubrics";
 }
 
-<h1>Community Rubrics</h1>
+@section scripts {
+    <script>
+        var modelData = @Html.Raw(JsonConvert.SerializeObject(Model));
+    </script>
+    <script src="~/js/community.js"></script>
+}
+
+<style>
+    h1 {
+        width: 100%;
+        text-align: center;
+    }
+
+    a {
+        color: white;
+    }
+
+    footer {
+        margin: 0;
+        padding: 0;
+    }
+
+    .sidebar {
+        text-align: right;
+        height: 100%;
+    }
+
+    #rating {
+        float: right;
+    }
+
+    #subjectGradeSeparator {
+        margin: 20px;
+    }
+</style>
 
 <div class="row">
-    <div class="col-3">
-        @foreach (var subject in Model.Subjects)
-        {
-            <p>@subject.SubjectName</p>
-        }
-        <hr />
-        @foreach (var grade in Model.Grades)
-        {
-            <p>@grade.GradeName</p>
-        }
+    <div class="col-sm-2 d-none d-md-block sidebar bg-dark">
+        <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+                @foreach (var subject in Model.Subjects)
+                {
+                    <li class="nav-item">
+                        <a href="#" class="subject" data-subject-id="@subject.Id">@subject.SubjectName</a>
+                    </li>
+                }
+
+                <li id="subjectGradeSeparator"></li>
+
+                @foreach (var grade in Model.Grades)
+                {
+                    <li class="nav-item">
+                        <a href="#" class="grade" data-grade-id="@grade.Id">@grade.GradeName</a>
+                    </li>
+                }
+            </ul>
+        </div>
     </div>
-    <div class="col-9">
-        <div class="row">
+    <div class="col-sm-10">
+        <h1>Community Rubrics</h1>
+        <div class="row" id="rubrics">
             @foreach (var rubric in Model.Rubrics)
             {
-                <div class="col-6">
+                <div class="col-sm-6">
                     <div class="card">
                         <div class="card-body">
                             @*<div class="thumbnail-container">
@@ -30,11 +76,17 @@
                                         <iframe src="@Url.Action("RubricView", "Rubric", new { rubricId = rubric.Id })" frameborder="0"></iframe>
                                     </div>
                                 </div>*@
-                            <h5 class="card-title">@rubric.Title</h5>
+                            <p id="rating">+@rubric.TotalRating</p>
+                            <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=@rubric.Id" class="text-white">@rubric.Title</a></h5>
+                            <sub class="text-light">@rubric.Grade.GradeName @rubric.Subject.SubjectName</sub>
+                            <br /><br />
                             <p class="card-text">@(rubric.Description == null ? "No description." : rubric.Description)</p>
                             <a href="/Rubric/RubricView?rubricId=@rubric.Id" class="btn btn-primary">View Rubric</a>
+                            <br /><br />
+                            <small class="text-light"><em>Created by @rubric.CreatedByUser.UserName</em></small>
                             <br />
-                            <small>Created by @rubric.CreatedByUser.UserName on @rubric.DateCreated</small>
+                            <small class="text-light"><em>@rubric.DateCreated</em></small>
+
                         </div>
                     </div>
                 </div>

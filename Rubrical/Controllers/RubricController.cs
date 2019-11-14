@@ -28,8 +28,7 @@ namespace Rubrical.Controllers
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
-
-            var currentUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.ApplicationUserId == currentUser.Id).ToListAsync();
+            var currentUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.ApplicationUserId == currentUser.Id).OrderByDescending(x => x.DateCreated).ToListAsync();
 
             var indexVM = new RubricIndexViewModel { Rubrics = currentUserRubrics };
 
@@ -38,8 +37,8 @@ namespace Rubrical.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var subjects = await _applicationDbContext.Subjects.OrderBy(s => s.SubjectName).ToListAsync();
-            var grades = await _applicationDbContext.Grades.OrderBy(g => g.GradeName).ToListAsync();
+            var subjects = await _applicationDbContext.Subjects.OrderBy(x => x.SubjectName).ToListAsync();
+            var grades = await _applicationDbContext.Grades.OrderBy(x => x.Number).ThenBy(x => x.GradeName).ToListAsync();
 
             return View(new RubricViewModel { Subjects = subjects, Grades = grades });
         }
@@ -61,7 +60,7 @@ namespace Rubrical.Controllers
                 TotalRating = 0
             };
             var newRow = new Row { RubricId = rubric.Id };
-            Cell cell = new Cell { RowId = newRow.Id, Text = "newRubricCell" };
+            Cell cell = new Cell { RowId = newRow.Id, Text = "First Cell!" };
             newRow.Cells.Add(cell);
             rubric.Rows.Add(newRow);
 

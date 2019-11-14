@@ -2,26 +2,44 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+<style>
+    .dropdown-menu {
+        text-align:center;
+    }
+
+    form[class="dropdown-item"], form[class="dropdown-item"] .btn {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+</style>
+
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-lg fa-user"></i></button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-125px, 35px, 0px);">
+                    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Settings</a>
+                    @*<a class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">Logout</a>*@
+                    <form class="dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="btn">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @*<li class="nav-item">
             <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
         </li>
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                 <button type="submit" class="nav-link btn btn-link">Logout</button>
             </form>
-        </li>
+        </li>*@
     }
     else
     {
-        @*<li class="nav-item">
-                <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
-            </li>*@
         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
             <div class="btn-group" role="group">
                 <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-lg fa-user"></i></button>
@@ -31,6 +49,5 @@
                 </div>
             </div>
         </div>
-
     }
 </ul>
