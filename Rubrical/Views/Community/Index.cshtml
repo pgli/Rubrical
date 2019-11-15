@@ -13,18 +13,20 @@
 }
 
 <style>
-    h1 {
+    h1, h3 {
         width: 100%;
         text-align: center;
+        margin-bottom: 10px;
+        vertical-align: middle;
     }
 
     a {
         color: white;
     }
 
-    a:hover {
-        color: rgb(52, 152, 219);
-    }
+        a:hover {
+            color: rgb(52, 152, 219);
+        }
 
     footer {
         margin: 0;
@@ -33,7 +35,7 @@
 
     .sidebar {
         text-align: right;
-        height: 100%;
+        height: 100vh;
     }
 
     #rating {
@@ -41,18 +43,25 @@
     }
 
     #subjectGradeSeparator {
-        margin: 20px;
+        margin: 40px 20px 40px 20px;
     }
 
     .active {
         color: red;
+    }
+
+    #selectSort {
+        width: 180px;
+        margin: 15px;
     }
 </style>
 
 <div class="row">
     <div class="col-sm-2 d-none d-md-block sidebar bg-dark">
         <div class="sidebar-sticky">
+            <h3>Filtering</h3>
             <ul class="nav flex-column">
+                <li style="text-decoration:underline">Subjects</li>
                 @foreach (var subject in Model.Subjects)
                 {
                     <li class="nav-item">
@@ -62,6 +71,7 @@
 
                 <li id="subjectGradeSeparator"></li>
 
+                <li style="text-decoration:underline">Grades</li>
                 @foreach (var grade in Model.Grades)
                 {
                     <li class="nav-item">
@@ -80,20 +90,14 @@
             <option value="4">Newest</option>
             <option value="5">Oldest</option>
         </select>
-
         <h1>Community Rubrics</h1>
         <div class="row" id="rubrics">
             @foreach (var rubric in Model.Rubrics)
             {
                 <div class="col-sm-6">
-                    <div class="card">
+                    <div class="card border-info">
                         <div class="card-body">
-                            @*<div class="thumbnail-container">
-                                <div class="thumbnail">
-                                    <iframe src="@Url.Action("RubricView", "Rubric", new { rubricId = rubric.Id })" frameborder="0"></iframe>
-                                </div>
-                            </div>*@
-                            <p id="rating">@rubric.TotalRating</p>
+                            <p id="rating">Rating: @rubric.TotalRating</p>
                             <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=@rubric.Id" class="text-white">@rubric.Title</a></h5>
                             <sub class="text-light">@rubric.Grade.GradeName @rubric.Subject.SubjectName</sub>
                             <br /><br />

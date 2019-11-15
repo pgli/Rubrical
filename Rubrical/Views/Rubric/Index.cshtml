@@ -4,19 +4,21 @@
     ViewData["Title"] = "My Rubrics";
 }
 
+<style>
+    #rating {
+        float: right;
+    }
+</style>
+
 <h1>My Rubrics</h1>
 
 <div class="row">
     @foreach (var rubric in Model.Rubrics)
     {
         <div class="col-sm-6">
-            <div class="card">
+            <div class="card border-info">
                 <div class="card-body">
-                    @*<div class="thumbnail-container">
-                        <div class="thumbnail">
-                            <iframe src="@Url.Action("RubricView", "Rubric", new { rubricId = rubric.Id })" frameborder="0"></iframe>
-                        </div>
-                    </div>*@
+                    <p id="rating">Rating: @rubric.TotalRating</p>
                     <h5 class="card-title">@rubric.Title</h5>
                     <p class="card-text">@(rubric.Description == null ? "No description." : rubric.Description)</p>
                     <a href="/Rubric/RubricView?rubricId=@rubric.Id" class="btn btn-primary">View Rubric</a>

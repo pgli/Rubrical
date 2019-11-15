@@ -26,7 +26,7 @@
                 var desc = (rubric.description == null) ? "No description." : rubric.description;
                 rubricsData +=
                     `<div class="col-sm-6">
-                    <div class="card">
+                    <div class="card border-info">
                         <div class="card-body">
                             <p id="rating">${rubric.totalRating}</p>
                             <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>
@@ -67,7 +67,7 @@ $("#selectSort").change(function () {
                 var desc = (rubric.description == null) ? "No description." : rubric.description;
                 rubricsData +=
                     `<div class="col-sm-6">
-                    <div class="card">
+                    <div class="card border-info">
                         <div class="card-body">
                             <p id="rating">${rubric.totalRating}</p>
                             <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>
@@ -119,7 +119,7 @@ $(".subject").on("click", function () {
                 var desc = (rubric.description == null) ? "No description." : rubric.description;
                 rubricsData +=
                     `<div class="col-sm-6">
-                    <div class="card">
+                    <div class="card border-info">
                         <div class="card-body">
                             <p id="rating">${rubric.totalRating}</p>
                             <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>

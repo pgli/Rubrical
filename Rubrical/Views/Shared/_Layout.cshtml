@@ -29,6 +29,9 @@
                         }
                     }
                     <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Rubric" asp-action="Index">My Rubrics</a>
                     </li>
                     <li class="nav-item">
@@ -49,11 +52,11 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    @*<footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - Rubrical - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - Rubrical
         </div>
-    </footer>
+    </footer>*@
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

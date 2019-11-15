@@ -2,7 +2,7 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Login";
 }
 
 <style>
@@ -18,6 +18,7 @@
         padding: 0;
         background: none;
         border: none;
+        width: 60%;
     }
 
         button[value="Google"]:hover {
@@ -32,7 +33,6 @@
     <div class="col-md-4">
         <section>
             <form id="account" method="post">
-                @*<h5>Use a local account to log in.</h5>*@
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
@@ -65,7 +65,7 @@
                     </p>
                 </div>
             </form>
-            <br /><br /><hr /><br />
+            <hr />
             <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                 <button type="submit" name="provider" value="Google" title="Log in using your Google account"><img src="~/img/google.png" class="img-fluid" alt="Google Login" /></button>
             </form>
