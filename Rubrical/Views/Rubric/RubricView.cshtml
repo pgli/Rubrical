@@ -21,13 +21,17 @@
 }
 
 <style>
-    h5 {
+    h1, h5 {
         text-align: center;
     }
 
     #upvoteDiv {
-        float: right;
-        margin: 10px;
+        position: fixed;
+        top: 85px;
+        right: 24px;
+        height: 100%;
+        z-index: 1;
+        font-size: 20px;
     }
 
         #upvoteDiv, #upvoteDiv * {
@@ -63,6 +67,14 @@
         color: red !important;
     }
 
+    .fa-thumbs-up:hover {
+        color: rgb(26, 105, 38) !important;
+    }
+
+    .fa-thumbs-down:hover {
+        color: rgb(105, 35, 26) !important;
+    }
+
     #export {
         display: inline;
     }
@@ -86,7 +98,7 @@ else
         <p>Rating: @Model.TotalRating</p>
     </div>
 }
-
+<br />
 <h1>@Model.Title</h1>
 <h5>@Model.Description</h5>
 
