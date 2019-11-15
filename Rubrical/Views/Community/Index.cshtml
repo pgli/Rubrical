@@ -22,6 +22,10 @@
         color: white;
     }
 
+    a:hover {
+        color: rgb(52, 152, 219);
+    }
+
     footer {
         margin: 0;
         padding: 0;
@@ -80,7 +84,7 @@
                                         <iframe src="@Url.Action("RubricView", "Rubric", new { rubricId = rubric.Id })" frameborder="0"></iframe>
                                     </div>
                                 </div>*@
-                            <p id="rating">+@rubric.TotalRating</p>
+                            <p id="rating">@rubric.TotalRating</p>
                             <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=@rubric.Id" class="text-white">@rubric.Title</a></h5>
                             <sub class="text-light">@rubric.Grade.GradeName @rubric.Subject.SubjectName</sub>
                             <br /><br />

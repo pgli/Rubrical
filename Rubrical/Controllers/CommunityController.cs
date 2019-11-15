@@ -26,7 +26,7 @@ namespace Rubrical.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).Include(x => x.CreatedByUser).OrderBy(x => x.TotalRating).ToListAsync();
+            var publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).Include(x => x.CreatedByUser).OrderByDescending(x => x.TotalRating).ToListAsync();
             var allSubjects = await _applicationDbContext.Subjects.OrderBy(x => x.SubjectName).ToListAsync();
             var allGrades = await _applicationDbContext.Grades.OrderBy(x => x.Number).ThenBy(x => x.GradeName).ToListAsync();
 
@@ -46,12 +46,12 @@ namespace Rubrical.Controllers
                 if (filterModel.FilterSubjectId > 0)
                 {
                     // filter by both Grade and Subject
-                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.GradeId == filterModel.FilterGradeId && x.SubjectId == filterModel.FilterSubjectId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.GradeId == filterModel.FilterGradeId && x.SubjectId == filterModel.FilterSubjectId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderByDescending(x => x.TotalRating).ToListAsync();
                 }
                 else
                 {
                     // filter by Grade only
-                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.GradeId == filterModel.FilterGradeId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.GradeId == filterModel.FilterGradeId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderByDescending(x => x.TotalRating).ToListAsync();
                 }
 
                 communityFilteredViewModel = new List<CommunityFilteredViewModel>();
@@ -78,7 +78,7 @@ namespace Rubrical.Controllers
                 if (filterModel.FilterSubjectId > 0)
                 {
                     // filter by Subject only
-                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.SubjectId == filterModel.FilterSubjectId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+                    publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false && x.SubjectId == filterModel.FilterSubjectId).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderByDescending(x => x.TotalRating).ToListAsync();
 
                     communityFilteredViewModel = new List<CommunityFilteredViewModel>();
 
@@ -101,7 +101,7 @@ namespace Rubrical.Controllers
                 }
             }
 
-            publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderBy(x => x.TotalRating).ToListAsync();
+            publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).Include(x => x.CreatedByUser).Include(x => x.Grade).Include(x => x.Subject).OrderByDescending(x => x.TotalRating).ToListAsync();
             communityFilteredViewModel = new List<CommunityFilteredViewModel>();
 
             foreach (var rubric in publicUserRubrics)

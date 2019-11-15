@@ -11,6 +11,7 @@ using Rubrical.Data;
 using Rubrical.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Rubrical
 {
@@ -37,7 +38,7 @@ namespace Rubrical
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<ApplicationUser>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -119,6 +120,7 @@ namespace Rubrical
 
             if (!(db.Subjects.Where(x => x.SubjectName == subject1.SubjectName).Any()))
             {
+                #region Add Mock Data
                 db.Subjects.Add(subject1);
                 db.Subjects.Add(subject2);
                 db.Subjects.Add(subject3);
@@ -148,8 +150,29 @@ namespace Rubrical
                 db.Grades.Add(gradeExtra1);
                 db.Grades.Add(gradeExtra2);
                 db.Grades.Add(gradeExtra3);
+                #endregion
 
                 db.SaveChanges();
+            }
+
+            CreateRolesandUsersAsync(serviceProvider);
+        }
+
+        private async Task CreateRolesandUsersAsync(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            string[] roles = { "Admin" };
+
+            IdentityResult roleResult;
+            foreach (var role in roles)
+            {
+                var roleExists = await roleManager.RoleExistsAsync(role);
+                if (!roleExists)
+                {
+                    roleResult = await roleManager.CreateAsync(new IdentityRole(role));
+                }
             }
         }
     }

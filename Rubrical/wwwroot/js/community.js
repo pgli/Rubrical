@@ -1,12 +1,12 @@
 ﻿$(".grade").on("click", function () {
     var selectedGradeId = $(this).attr("data-grade-id");
-    $(".grade").removeClass("active");
+    $(".grade").removeClass("text-info");
 
     if (modelData.FilterGradeId == selectedGradeId) {
         modelData.FilterGradeId = 0;
-        $(this).removeClass("active");
+        $(this).removeClass("text-info");
     } else {
-        $(this).addClass("active");
+        $(this).addClass("text-info");
         modelData.FilterGradeId = selectedGradeId;
     }
 
@@ -26,7 +26,7 @@
                     `<div class="col-sm-6">
                     <div class="card">
                         <div class="card-body">
-                            <p id="rating">+${rubric.totalRating}</p>
+                            <p id="rating">${rubric.totalRating}</p>
                             <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>
                             <sub class="text-light">${rubric.grade.gradeName} ${rubric.subject.subjectName}</sub>
                             <br /><br />
@@ -50,17 +50,13 @@
 
 $(".subject").on("click", function () {
     var selectedSubjectId = $(this).attr("data-subject-id");
-    $(".subject").removeClass("active");
+    $(".subject").removeClass("text-info");
 
-    console.log(modelData.FilterSubjectId)
-    console.log(selectedSubjectId)
     if (modelData.FilterSubjectId == selectedSubjectId) {
-        console.log("a")
         modelData.FilterSubjectId = 0;
-        $(this).removeClass("active");
+        $(this).removeClass("text-info");
     } else {
-        console.log("b")
-        $(this).addClass("active");
+        $(this).addClass("text-info");
         modelData.FilterSubjectId = selectedSubjectId;
     }
 
@@ -80,7 +76,7 @@ $(".subject").on("click", function () {
                     `<div class="col-sm-6">
                     <div class="card">
                         <div class="card-body">
-                            <p id="rating">+${rubric.totalRating}</p>
+                            <p id="rating">${rubric.totalRating}</p>
                             <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>
                             <sub class="text-light">${rubric.grade.gradeName} ${rubric.subject.subjectName}</sub>
                             <br /><br />

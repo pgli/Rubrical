@@ -12,10 +12,25 @@
     <script src="~/js/rubric.js"></script>
 }
 
-<h1>@Model.Title</h1>
-<h5>@Model.Description</h5>
-
 <style>
+    #upvoteDiv {
+        float: right;
+        margin: 10px;
+    }
+
+    #upvoteDiv, #upvoteDiv * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    #upvoteDiv p {
+        margin: 10px;
+    }
+
+    #upvoteDiv a i {
+        color: grey;
+    }
+
     .table td, .table th {
         min-width: 100px;
     }
@@ -27,7 +42,27 @@
     #selectPrivacy {
         width: 100px;
     }
+
+    .upvoted {
+        color: green !important;
+    }
+
+    .downvoted {
+        color: red !important;
+    }
 </style>
+
+@if (ViewBag.IsOwner == false)
+{
+    <div id="upvoteDiv">
+        <a href="#" name="vote" data-vote-type="up"><i class="fa fa-thumbs-up fa-2x @(ViewBag.Rating == 1 ? "upvoted" : "")"></i></a>
+        <p>@Model.TotalRating</p>
+        <a href="#" name="vote" data-vote-type="down"><i class="fa fa-thumbs-down fa-2x @(ViewBag.Rating == 0 ? "downvoted" : "")"></i></a>
+    </div>
+}
+
+<h1>@Model.Title</h1>
+<h5>@Model.Description</h5>
 
 <table class="table table-hover table-bordered" id="rubric">
     @foreach (var row in Model.Rows.OrderBy(r => r.Id))

@@ -84,11 +84,43 @@ $("body").on("focusout", "[name=cell]", function () {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             console.log(data);
+        },
+        error: function (data) {
+            console.log(data);
         }
     });
 });
 
+$("[name=vote]").click(function () {
+    var vote = $(this).attr("data-vote-type") == "up" ? true : false;
 
+    $.ajax({
+        type: "POST",
+        url: "/Rubric/EditRating",
+        data: JSON.stringify({ RubricId: modelData.Id, Value: vote }),
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+            console.log(data);
+
+            $("[data-vote-type=up]").children().removeClass("upvoted");
+            $("[data-vote-type=down]").children().removeClass("downvoted");
+            if (data.vote == 1) {
+                $("[data-vote-type=up]").children().addClass("upvoted");
+            } else if (data.vote == 0) {
+                $("[data-vote-type=down]").children().addClass("downvoted");
+            } else {
+                $("[data-vote-type=up]").children().removeClass("upvoted");
+                $("[data-vote-type=down]").children().removeClass("downvoted");
+            }
+
+            $("#upvoteDiv p").text(data.totalRating);
+        },
+        error: function (data) {
+            console.log(data);
+        }
+    });
+});
 
 
 function toggleEditMode() {

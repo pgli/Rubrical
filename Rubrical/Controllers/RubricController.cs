@@ -75,20 +75,23 @@ namespace Rubrical.Controllers
         public async Task<IActionResult> RubricView(int rubricId)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var rubric = await _applicationDbContext.Rubrics.SingleOrDefaultAsync(x => x.Id == rubricId);
+            var rubric = await _applicationDbContext.Rubrics.Include(x => x.Ratings).SingleOrDefaultAsync(x => x.Id == rubricId);
             if (rubric == null || (rubric.IsPrivate && rubric.ApplicationUserId != currentUser.Id))
             {
                 return RedirectToAction("Index", "Home");
             }
 
             rubric.Rows = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).Include("Cells").ToList();
-            if (rubric.ApplicationUserId == currentUser.Id)
+            ViewBag.IsOwner = rubric.ApplicationUserId == currentUser.Id;
+
+            if (rubric.Ratings.Any(x => x.ApplicationUserId == currentUser.Id))
             {
-                ViewBag.IsOwner = true;
+                var rating = rubric.Ratings.First(x => x.ApplicationUserId == currentUser.Id);
+                ViewBag.Rating = rating.Value ? 1 : 0;
             }
             else
             {
-                ViewBag.IsOwner = false;
+                ViewBag.Rating = -1;
             }
 
             ViewBag.RubricId = rubric.Id;
@@ -217,6 +220,62 @@ namespace Rubrical.Controllers
                 await _applicationDbContext.SaveChangesAsync();
                 return Json("Successfully changed privacy.");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRating([FromBody] SetRatingModel setRatingModel)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var rubric = await _applicationDbContext.Rubrics.Include(x => x.Ratings)
+                                                            .SingleOrDefaultAsync(x => x.Id == setRatingModel.RubricId);
+            if (rubric == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Rubric not found.");
+            }
+
+            if (rubric.Ratings.Where(x => x.ApplicationUserId == currentUser.Id).Any())
+            {
+                var rating = rubric.Ratings.First(x => x.ApplicationUserId == currentUser.Id);
+                if (rating.Value == setRatingModel.Value)
+                {
+                    //user undoes vote
+                    rubric.Ratings.Remove(rating);
+                    rubric.TotalRating = setRatingModel.Value ? rubric.TotalRating - 1 : rubric.TotalRating + 1;
+                }
+                else
+                {
+                    //user switches directly from one vote to another
+                    rating.Value = setRatingModel.Value;
+                    rubric.TotalRating = setRatingModel.Value ? rubric.TotalRating + 2 : rubric.TotalRating - 2;
+                }
+
+            }
+            else
+            {
+                await _applicationDbContext.Ratings.AddAsync(new Rating
+                {
+                    ApplicationUserId = currentUser.Id,
+                    RubricId = setRatingModel.RubricId,
+                    Value = setRatingModel.Value
+                });
+
+                rubric.TotalRating = setRatingModel.Value ? rubric.TotalRating + 1 : rubric.TotalRating - 1;
+            }
+
+            await _applicationDbContext.SaveChangesAsync();
+
+            var ratingValue = -1;
+            if (rubric.Ratings.Any(x => x.ApplicationUserId == currentUser.Id))
+            {
+                var rating = rubric.Ratings.First(x => x.ApplicationUserId == currentUser.Id);
+                ratingValue = rating.Value ? 1 : 0;
+            }
+            return Json(new RatingViewModel
+            {
+                Vote = ratingValue,
+                TotalRating = rubric.TotalRating.HasValue ? rubric.TotalRating.Value : 0
+            });
         }
     }
 }
