@@ -36,7 +36,8 @@ namespace Rubrical.Controllers
 
             return View(new ApplicationUserListViewModel
             {
-                Users = await users.ToListAsync()
+                Users = await users.ToListAsync(),
+                Subjects = await _applicationDbContext.Subjects.ToListAsync()
             });
         }
 

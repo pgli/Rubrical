@@ -13,12 +13,17 @@
         width: 30px;
         height: 30px;
     }
+
+    h2 {
+        text-align: center;
+    }
 </style>
 
 <h1>Admin Control Panel</h1>
 
 <div class="row">
     <div class="col-sm-6">
+        <h2>Users</h2>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -39,8 +44,36 @@
             </tbody>
         </table>
     </div>
-    <div class="col-sm-6">
 
+
+    <div class="col-sm-6">
+        <h2>Subjects</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th><a asp-controller="Subject" asp-action="Create">Create New</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Subjects)
+                {
+                    <tr>
+                        <td>
+                            @item.SubjectName
+                        </td>
+                        <td>
+                            @item.SubjectDescription
+                        </td>
+                        <td>
+                            <a asp-controller="Subject" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-controller="Subject" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 

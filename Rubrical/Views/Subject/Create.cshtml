@@ -1,0 +1,39 @@
+﻿@model Rubrical.Models.Subject
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<style>
+    .col-md-4, h2, #back {
+        text-align: center;
+        margin: 0 auto;
+    }
+</style>
+
+<h2>Create Subject</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Subject Name</label>
+                <input asp-for="SubjectName" class="form-control" />
+                <span asp-validation-for="SubjectName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Subject Description</label>
+                <input asp-for="SubjectDescription" class="form-control" />
+                <span asp-validation-for="SubjectDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br />
+<div id="back">
+    <a asp-controller="Admin" asp-action="Index">Back to Admin Control Panel</a>
+</div>
