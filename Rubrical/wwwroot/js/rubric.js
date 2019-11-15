@@ -9,7 +9,6 @@ $("#buttonAddRow").on("click", function () {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                console.log(data);
                 var emptyCells = "";
                 for (var i = 0; i < data.cells.length; i++) {
                     var cell = data.cells[i];
@@ -34,7 +33,6 @@ $("#buttonAddColumn").on("click", function () {
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             success: function (data) {
-                console.log(data);
                 $("#rubric").find("tr").each(function (index) {
                     $(this).append(`<td contenteditable=true name='cell' data-cell-id='${data[index]}'></td>`);
                 });
@@ -87,22 +85,6 @@ $("#buttonDelete").on("click", function () {
     }
 });
 
-//$("#buttonModify").on("click", function () {
-//    $.ajax({
-//        type: "POST",
-//        url: "",
-//        data: JSON.stringify({ RubricId: modelData.Id }),
-//        dataType: "json",
-//        contentType: "application/json; charset=utf-8",
-//        success: function (data) {
-//            console.log(data);
-//        },
-//        error: function (data) {
-//            console.log(data);
-//        }
-//    });
-//});
-
 $("body").on("focusout", "[name=cell]", function () {
     var rubricId = modelData.Id;
     var element = $(this);
@@ -140,8 +122,6 @@ $("[name=vote]").click(function () {
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
-            console.log(data);
-
             $("[data-vote-type=up]").children().removeClass("upvoted");
             $("[data-vote-type=down]").children().removeClass("downvoted");
             if (data.vote == 1) {

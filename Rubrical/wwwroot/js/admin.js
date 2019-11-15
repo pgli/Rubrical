@@ -9,8 +9,6 @@
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
-            console.log(data);
-
             location.reload();
         },
         error: function (data) {
@@ -30,8 +28,6 @@ $("[name=admin-delete]").click(function () {
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
-            console.log(data);
-
             location.reload();
         },
         error: function (data) {
