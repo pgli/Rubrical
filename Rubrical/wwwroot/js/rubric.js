@@ -69,12 +69,30 @@ $("#buttonEditContents").on("click", function () {
     toggleEditMode();
 });
 
+$("#buttonDelete").on("click", function () {
+    if (confirm("Are you sure you want to delete this rubric?")) {
+        $.ajax({
+            type: "POST",
+            url: "/Rubric/DeleteRubric",
+            data: JSON.stringify({ RubricId: modelData.Id }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                window.location.href = "/Rubric";
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
+    }
+});
+
 $("body").on("focusout", "[name=cell]", function () {
     var rubricId = modelData.Id;
     var element = $(this);
     var rowId = element.parent().attr("data-row-id");
     var cellId = element.attr("data-cell-id");
-    var text = element.text();
+    var text = element[0].innerHTML;
 
     $.ajax({
         type: "POST",

@@ -6,36 +6,45 @@
 }
 
 @section scripts {
-    <script>
-        var modelData = @Html.Raw(JsonConvert.SerializeObject(Model));
-    </script>
+    <script>var modelData = @Html.Raw(JsonConvert.SerializeObject(Model));</script>
     <script src="~/js/rubric.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("td").each(function (index, value) {
+                $(this).html(decodeHtml($(this).text()))
+            });
+        });
+    </script>
 }
 
 <style>
+    h5 {
+        text-align: center;
+    }
+
     #upvoteDiv {
         float: right;
         margin: 10px;
     }
 
-    #upvoteDiv, #upvoteDiv * {
-        display: inline-block;
-        vertical-align: middle;
-    }
+        #upvoteDiv, #upvoteDiv * {
+            display: inline-block;
+            vertical-align: middle;
+        }
 
-    #upvoteDiv p {
-        margin: 10px;
-    }
+            #upvoteDiv p {
+                margin: 10px;
+            }
 
-    #upvoteDiv a i {
-        color: grey;
-    }
+            #upvoteDiv a i {
+                color: grey;
+            }
 
     .table td, .table th {
         min-width: 100px;
     }
 
-    #buttonAddRow, #buttonAddColumn, #buttonSaveChanges, #selectPrivacy {
+    #buttonAddRow, #buttonAddColumn, #buttonSaveChanges, #selectPrivacy, #buttonDelete {
         display: none;
     }
 
@@ -49,6 +58,13 @@
 
     .downvoted {
         color: red !important;
+    }
+
+    #buttonDelete {
+        position: fixed;
+        bottom: 90px;
+        left: 20px;
+        z-index: 99999;
     }
 </style>
 
@@ -96,4 +112,10 @@
         }
     </select>
     <hr />
+    <button type="button" class="btn btn-danger edit-toggle" id="buttonDelete">Delete Rubric</button>
+}
+
+@if (User.IsInRole("Admin"))
+{
+    <button type="button" class="btn btn-danger edit-toggle" id="buttonDelete" style="display: block;">Delete Rubric</button>
 }

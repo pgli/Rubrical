@@ -277,5 +277,33 @@ namespace Rubrical.Controllers
                 TotalRating = rubric.TotalRating.HasValue ? rubric.TotalRating.Value : 0
             });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRubric ([FromBody] RubricDeleteViewModel rubricDeleteViewModel)
+        {
+            var adminRole = await _applicationDbContext.Roles.SingleOrDefaultAsync(r => r.Name.Equals("Admin"));
+            var adminRoleId = adminRole.Id;
+            var currentUser = await _userManager.GetUserAsync(User);
+            var isOwner = await _applicationDbContext.Rubrics.Where(x => x.ApplicationUserId == currentUser.Id && x.Id == rubricDeleteViewModel.RubricId).AnyAsync();
+            var isAdmin = await _applicationDbContext.UserRoles.AnyAsync(y => y.UserId.Equals(currentUser.Id) && y.RoleId.Equals(adminRoleId));
+
+            if (!isOwner && !isAdmin)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Insufficient permissions.");
+            }
+
+            var rubric = await _applicationDbContext.Rubrics.SingleOrDefaultAsync(r => r.Id == rubricDeleteViewModel.RubricId);
+            if (rubric == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Rubric not found.");
+            }
+
+            _applicationDbContext.Rubrics.Remove(rubric);
+            await _applicationDbContext.SaveChangesAsync();
+
+            return Json("Successfully deleted rubric.");
+        }
     }
 }
