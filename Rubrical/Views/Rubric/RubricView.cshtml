@@ -7,14 +7,17 @@
 
 @section scripts {
     <script>var modelData = @Html.Raw(JsonConvert.SerializeObject(Model));</script>
-    <script src="~/js/rubric.js"></script>
     <script>
         $(document).ready(function () {
             $("td").each(function (index, value) {
                 $(this).html(decodeHtml($(this).text()))
             });
         });
+        var isLoggedIn = @User.Identity.IsAuthenticated.ToString().ToLower();
     </script>
+    <script src="https://unpkg.com/jspdf@1.5.3/dist/jspdf.min.js"></script>
+    <script src="https://unpkg.com/jspdf-autotable@3.2.11/dist/jspdf.plugin.autotable.js"></script>
+    <script src="~/js/rubric.js"></script>
 }
 
 <style>
@@ -60,11 +63,12 @@
         color: red !important;
     }
 
+    #export {
+        display: inline;
+    }
+
     #buttonDelete {
-        position: fixed;
-        bottom: 90px;
-        left: 20px;
-        z-index: 99999;
+        float: right;
     }
 </style>
 
@@ -74,6 +78,12 @@
         <a href="#" name="vote" data-vote-type="up"><i class="fa fa-thumbs-up fa-2x @(ViewBag.Rating == 1 ? "upvoted" : "")"></i></a>
         <p>@Model.TotalRating</p>
         <a href="#" name="vote" data-vote-type="down"><i class="fa fa-thumbs-down fa-2x @(ViewBag.Rating == 0 ? "downvoted" : "")"></i></a>
+    </div>
+}
+else
+{
+    <div id="upvoteDiv">
+        <p>Rating: @Model.TotalRating</p>
     </div>
 }
 
@@ -92,8 +102,25 @@
     }
 </table>
 
+<div class="dropdown" id="export">
+    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown"><i class="fa fa-download"></i> Export</button>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="#" id="excel">Excel</a>
+        <a class="dropdown-item" href="#" id="pdf">PDF</a>
+        <a class="dropdown-item" href="#" onclick="window.print()">Print</a>
+    </div>
+</div>
+
+<button type="button" class="btn btn-warning" id="buttonCopy"><i class="fa fa-copy"></i> Copy</button>
+
+@if (User.IsInRole("Admin"))
+{
+    <button type="button" class="btn btn-danger" id="buttonDelete" style="display: block;">Delete Rubric</button>
+}
+
 @if (ViewBag.IsOwner == true)
 {
+    <button type="button" class="btn btn-danger edit-toggle" id="buttonDelete">Delete Rubric</button>
     <button type="button" class="btn btn-warning" id="buttonEditContents"><i class="fa fa-pencil"></i> Edit</button>
     <hr />
     <button type="button" class="btn btn-primary edit-toggle" id="buttonAddRow"><i class="fa fa-plus"></i> Add Row</button>
@@ -112,10 +139,48 @@
         }
     </select>
     <hr />
-    <button type="button" class="btn btn-danger edit-toggle" id="buttonDelete">Delete Rubric</button>
+
 }
 
-@if (User.IsInRole("Admin"))
-{
-    <button type="button" class="btn btn-danger edit-toggle" id="buttonDelete" style="display: block;">Delete Rubric</button>
-}
+<div class="modal" id="myModal">
+    <form id="modifyForm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Copy Rubric</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="copyTitle">Enter a title:</label>
+                        <input type="text" class="form-control" id="copyTitle" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Create Copy</button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<div class="modal" id="mustBeLoggedIn">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                You must be logged in to use this feature.
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

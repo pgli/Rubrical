@@ -24,6 +24,6 @@ namespace Rubrical.RubricModels
         [Required]
         public bool IsPrivate { get; set; }
 
-
+        public int RubricId { get; set; }
     }
 }

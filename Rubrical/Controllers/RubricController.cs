@@ -72,6 +72,7 @@ namespace Rubrical.Controllers
             return RedirectToAction("Index", "Rubric");
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> RubricView(int rubricId)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -82,9 +83,9 @@ namespace Rubrical.Controllers
             }
 
             rubric.Rows = _applicationDbContext.Rows.Where(r => r.RubricId == rubric.Id).Include("Cells").ToList();
-            ViewBag.IsOwner = rubric.ApplicationUserId == currentUser.Id;
+            ViewBag.IsOwner = (currentUser?.Id == null) ? false : rubric.ApplicationUserId == currentUser.Id;
 
-            if (rubric.Ratings.Any(x => x.ApplicationUserId == currentUser.Id))
+            if ((currentUser?.Id == null) ? false : rubric.Ratings.Any(x => x.ApplicationUserId == currentUser.Id))
             {
                 var rating = rubric.Ratings.First(x => x.ApplicationUserId == currentUser.Id);
                 ViewBag.Rating = rating.Value ? 1 : 0;
@@ -279,7 +280,7 @@ namespace Rubrical.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteRubric ([FromBody] RubricDeleteViewModel rubricDeleteViewModel)
+        public async Task<IActionResult> DeleteRubric([FromBody] RubricDeleteViewModel rubricDeleteViewModel)
         {
             var adminRole = await _applicationDbContext.Roles.SingleOrDefaultAsync(r => r.Name.Equals("Admin"));
             var adminRoleId = adminRole.Id;
@@ -304,6 +305,58 @@ namespace Rubrical.Controllers
             await _applicationDbContext.SaveChangesAsync();
 
             return Json("Successfully deleted rubric.");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CopyRubric([FromBody] RubricCreateModel rubricCreateModel)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var rubric = await _applicationDbContext.Rubrics.Include(r => r.Rows).SingleOrDefaultAsync(r => r.Id == rubricCreateModel.RubricId);
+            if (rubric == null)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json("Rubric not found.");
+            }
+
+            var newRubric = new Rubric
+            {
+                Title = rubricCreateModel.Title,
+                ApplicationUserId = currentUser.Id,
+                Description = rubric.Description,
+                SubjectId = rubric.SubjectId,
+                GradeId = rubric.GradeId,
+                TotalRating = 0,
+                IsPrivate = true,
+                DateCreated = DateTime.Now
+            };
+            _applicationDbContext.Rubrics.Add(newRubric);
+            await _applicationDbContext.SaveChangesAsync();
+
+            var newRows = new List<Row>();
+            foreach (var oldRow in rubric.Rows)
+            {
+                var newRow = new Row
+                {
+                    RubricId = newRubric.Id
+                };
+                _applicationDbContext.Rows.Add(newRow);
+                await _applicationDbContext.SaveChangesAsync();
+
+                var oldCells = await _applicationDbContext.Cells.Where(x => x.RowId == oldRow.Id).ToListAsync();
+                foreach (var oldCell in oldCells)
+                {
+                    newRow.Cells.Add(new Cell
+                    {
+                        RowId = newRow.Id,
+                        Text = oldCell.Text
+                    });
+                }
+
+                await _applicationDbContext.SaveChangesAsync();
+            }
+
+            return Json(newRubric.Id);
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Rubrical.Controllers
                     });
                 }
 
-                return Json(communityFilteredViewModel);
+                return Json(sort(filterModel.SortType, communityFilteredViewModel));
             }
             else
             {
@@ -97,7 +97,7 @@ namespace Rubrical.Controllers
                         });
                     }
 
-                    return Json(communityFilteredViewModel);
+                    return Json(sort(filterModel.SortType, communityFilteredViewModel));
                 }
             }
 
@@ -118,8 +118,27 @@ namespace Rubrical.Controllers
                     TotalRating = rubric.TotalRating
                 });
             }
+            
+            return Json(sort(filterModel.SortType, communityFilteredViewModel));
+        }
 
-            return Json(communityFilteredViewModel);
+        public List<CommunityFilteredViewModel> sort(int sortType, List<CommunityFilteredViewModel> data)
+        {
+            switch (sortType)
+            {
+                case 1:
+                    return data.OrderBy(d => d.TotalRating).ToList();
+                case 2:
+                    return data.OrderBy(d => d.Title).ToList();
+                case 3:
+                    return data.OrderByDescending(d => d.Title).ToList();
+                case 4:
+                    return data.OrderByDescending(d => d.DateCreated).ToList();
+                case 5:
+                    return data.OrderBy(d => d.DateCreated).ToList();
+                default:
+                    return data.OrderByDescending(d => d.TotalRating).ToList();
+            }
         }
     }
 }

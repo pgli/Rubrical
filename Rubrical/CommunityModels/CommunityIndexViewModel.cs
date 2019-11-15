@@ -13,6 +13,6 @@ namespace Rubrical.CommunityModels
         public List<Grade> Grades { get; set; }
         public int? FilterSubjectId { get; set; }
         public int? FilterGradeId { get; set; }
-
+        public int SortType { get; set; }
     }
 }
