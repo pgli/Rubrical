@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : Rubrical
+// Author           : Admin
+// Created          : 11-15-2019
+//
+// Last Modified By : Admin
+// Last Modified On : 11-15-2019
+// ***********************************************************************
+// <copyright file="RubricController.cs" company="Rubrical">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,18 +26,38 @@ using Rubrical.RubricModels;
 
 namespace Rubrical.Controllers
 {
+    /// <summary>
+    /// Class RubricController.
+    /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Authorize]
     public class RubricController : Controller
     {
+        /// <summary>
+        /// The application database context
+        /// </summary>
         private ApplicationDbContext _applicationDbContext;
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private UserManager<ApplicationUser> _userManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RubricController"/> class.
+        /// </summary>
+        /// <param name="applicationDbContext">The application database context.</param>
+        /// <param name="userManager">The user manager.</param>
         public RubricController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
         {
             _applicationDbContext = applicationDbContext;
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         public async Task<IActionResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -35,6 +68,10 @@ namespace Rubrical.Controllers
             return View(indexVM);
         }
 
+        /// <summary>
+        /// Creates this instance.
+        /// </summary>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         public async Task<IActionResult> Create()
         {
             var subjects = await _applicationDbContext.Subjects.OrderBy(x => x.SubjectName).ToListAsync();
@@ -43,6 +80,11 @@ namespace Rubrical.Controllers
             return View(new RubricViewModel { Subjects = subjects, Grades = grades });
         }
 
+        /// <summary>
+        /// Creates the rubric.
+        /// </summary>
+        /// <param name="rubricCreateModel">The rubric create model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateRubric(RubricCreateModel rubricCreateModel)
         {
@@ -72,6 +114,11 @@ namespace Rubrical.Controllers
             return RedirectToAction("Index", "Rubric");
         }
 
+        /// <summary>
+        /// Rubrics the view.
+        /// </summary>
+        /// <param name="rubricId">The rubric identifier.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [AllowAnonymous]
         public async Task<IActionResult> RubricView(int rubricId)
         {
@@ -99,6 +146,11 @@ namespace Rubrical.Controllers
             return View(rubric);
         }
 
+        /// <summary>
+        /// Adds the row.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> AddRow([FromBody] Row data)
         {
@@ -126,6 +178,11 @@ namespace Rubrical.Controllers
             return Json(new RowViewModel { Id = newRow.Id, Cells = newRow.Cells });
         }
 
+        /// <summary>
+        /// Adds the column.
+        /// </summary>
+        /// <param name="cellEditModel">The cell edit model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> AddColumn([FromBody] CellEditModel cellEditModel)
         {
@@ -151,6 +208,11 @@ namespace Rubrical.Controllers
             return Json(cellIds);
         }
 
+        /// <summary>
+        /// Edits the cell.
+        /// </summary>
+        /// <param name="cellEditModel">The cell edit model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> EditCell([FromBody] CellEditModel cellEditModel)
         {
@@ -190,6 +252,11 @@ namespace Rubrical.Controllers
             return Json("Successfully edited.");
         }
 
+        /// <summary>
+        /// Edits the privacy.
+        /// </summary>
+        /// <param name="privacyEditModel">The privacy edit model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> EditPrivacy([FromBody] PrivacyEditModel privacyEditModel)
         {
@@ -223,6 +290,11 @@ namespace Rubrical.Controllers
             }
         }
 
+        /// <summary>
+        /// Edits the rating.
+        /// </summary>
+        /// <param name="setRatingModel">The set rating model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> EditRating([FromBody] SetRatingModel setRatingModel)
         {
@@ -279,6 +351,11 @@ namespace Rubrical.Controllers
             });
         }
 
+        /// <summary>
+        /// Deletes the rubric.
+        /// </summary>
+        /// <param name="rubricDeleteViewModel">The rubric delete view model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> DeleteRubric([FromBody] RubricDeleteViewModel rubricDeleteViewModel)
         {
@@ -308,6 +385,11 @@ namespace Rubrical.Controllers
         }
 
 
+        /// <summary>
+        /// Copies the rubric.
+        /// </summary>
+        /// <param name="rubricCreateModel">The rubric create model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> CopyRubric([FromBody] RubricCreateModel rubricCreateModel)
         {

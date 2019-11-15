@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : Rubrical
+// Author           : Admin
+// Created          : 11-15-2019
+//
+// Last Modified By : Admin
+// Last Modified On : 11-15-2019
+// ***********************************************************************
+// <copyright file="CommunityController.cs" company="Rubrical">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,17 +26,37 @@ using Rubrical.RubricModels;
 
 namespace Rubrical.Controllers
 {
+    /// <summary>
+    /// Class CommunityController.
+    /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     public class CommunityController : Controller
     {
+        /// <summary>
+        /// The application database context
+        /// </summary>
         private ApplicationDbContext _applicationDbContext;
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private UserManager<ApplicationUser> _userManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommunityController"/> class.
+        /// </summary>
+        /// <param name="applicationDbContext">The application database context.</param>
+        /// <param name="userManager">The user manager.</param>
         public CommunityController(ApplicationDbContext applicationDbContext, UserManager<ApplicationUser> userManager)
         {
             _applicationDbContext = applicationDbContext;
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         public async Task<IActionResult> Index()
         {
             var publicUserRubrics = await _applicationDbContext.Rubrics.Where(x => x.IsPrivate == false).Include(x => x.CreatedByUser).OrderByDescending(x => x.TotalRating).ToListAsync();
@@ -35,6 +68,11 @@ namespace Rubrical.Controllers
             return View(indexVM);
         }
 
+        /// <summary>
+        /// Filters the rubrics.
+        /// </summary>
+        /// <param name="filterModel">The filter model.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         public async Task<IActionResult> FilterRubrics([FromBody] CommunityIndexViewModel filterModel)
         {
@@ -122,6 +160,12 @@ namespace Rubrical.Controllers
             return Json(sort(filterModel.SortType, communityFilteredViewModel));
         }
 
+        /// <summary>
+        /// Sorts the specified sort type.
+        /// </summary>
+        /// <param name="sortType">Type of the sort.</param>
+        /// <param name="data">The data.</param>
+        /// <returns>List&lt;CommunityFilteredViewModel&gt;.</returns>
         public List<CommunityFilteredViewModel> sort(int sortType, List<CommunityFilteredViewModel> data)
         {
             switch (sortType)

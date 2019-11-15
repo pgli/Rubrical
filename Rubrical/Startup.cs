@@ -1,4 +1,17 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿// ***********************************************************************
+// Assembly         : Rubrical
+// Author           : Admin
+// Created          : 11-15-2019
+//
+// Last Modified By : Admin
+// Last Modified On : 11-15-2019
+// ***********************************************************************
+// <copyright file="Startup.cs" company="Rubrical">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,16 +28,31 @@ using System.Threading.Tasks;
 
 namespace Rubrical
 {
+    /// <summary>
+    /// Class Startup.
+    /// </summary>
     public class Startup
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Startup"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <value>The configuration.</value>
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Configures the services.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
@@ -54,6 +82,12 @@ namespace Rubrical
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Configures the specified application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="env">The env.</param>
+        /// <param name="serviceProvider">The service provider.</param>
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
@@ -84,6 +118,10 @@ namespace Rubrical
             });
         }
 
+        /// <summary>
+        /// Seeds the data.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
         public void SeedData(IServiceProvider serviceProvider)
         {
             var db = serviceProvider.GetRequiredService<ApplicationDbContext>();
@@ -159,6 +197,10 @@ namespace Rubrical
             CreateRolesandUsersAsync(serviceProvider);
         }
 
+        /// <summary>
+        /// create rolesand users as an asynchronous operation.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
         private async Task CreateRolesandUsersAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();

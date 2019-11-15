@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : Rubrical
+// Author           : Admin
+// Created          : 11-15-2019
+//
+// Last Modified By : Admin
+// Last Modified On : 11-15-2019
+// ***********************************************************************
+// <copyright file="SubjectController.cs" company="Rubrical">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,23 +24,44 @@ using Rubrical.Models;
 
 namespace Rubrical.Controllers
 {
+    /// <summary>
+    /// Class SubjectController.
+    /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Authorize(Roles = "Admin")]
     public class SubjectController : Controller
     {
+        /// <summary>
+        /// The context
+        /// </summary>
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubjectController"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public SubjectController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: Subject
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         public async Task<IActionResult> Index()
         {
             return View(await _context.Subjects.ToListAsync());
         }
 
         // GET: Subject/Details/5
+        /// <summary>
+        /// Detailses the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,6 +80,10 @@ namespace Rubrical.Controllers
         }
 
         // GET: Subject/Create
+        /// <summary>
+        /// Creates this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Create()
         {
             return View();
@@ -54,6 +92,11 @@ namespace Rubrical.Controllers
         // POST: Subject/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Creates the specified subject.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,SubjectName,SubjectDescription")] Subject subject)
@@ -68,6 +111,11 @@ namespace Rubrical.Controllers
         }
 
         // GET: Subject/Edit/5
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +134,12 @@ namespace Rubrical.Controllers
         // POST: Subject/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="subject">The subject.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,SubjectName,SubjectDescription")] Subject subject)
@@ -119,6 +173,11 @@ namespace Rubrical.Controllers
         }
 
         // GET: Subject/Delete/5
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +196,11 @@ namespace Rubrical.Controllers
         }
 
         // POST: Subject/Delete/5
+        /// <summary>
+        /// Deletes the confirmed.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Task&lt;IActionResult&gt;.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -147,6 +211,11 @@ namespace Rubrical.Controllers
             return RedirectToAction(nameof(Index), "Admin");
         }
 
+        /// <summary>
+        /// Subjects the exists.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         private bool SubjectExists(int id)
         {
             return _context.Subjects.Any(e => e.Id == id);

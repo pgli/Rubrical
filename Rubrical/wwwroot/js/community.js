@@ -1,4 +1,20 @@
-﻿$(".grade").on("click", function () {
+﻿// ***********************************************************************
+// Assembly         : Rubrical
+// Author           : Admin
+// Created          : 11-15-2019
+//
+// Last Modified By : Admin
+// Last Modified On : 11-15-2019
+// ***********************************************************************
+// <copyright file="community.js" company="Rubrical">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+$(".grade").on("click", function () {
+    /// <summary>
+    /// 
+    /// </summary>
     var selectedGradeId = $(this).attr("data-grade-id");
     $(".grade").removeClass("text-info");
 
@@ -19,6 +35,10 @@
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="data">The data.</param>
             var rubricsData = "";
             for (var i = 0; i < data.length; i++) {
                 var rubric = data[i];
@@ -50,6 +70,9 @@
 });
 
 $("#selectSort").change(function () {
+    /// <summary>
+    /// 
+    /// </summary>
     var sortType = $("#selectSort option:selected").val();
 
     $.ajax({
@@ -59,6 +82,10 @@ $("#selectSort").change(function () {
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="data">The data.</param>
             var rubricsData = "";
             for (var i = 0; i < data.length; i++) {
                 var rubric = data[i];
@@ -90,6 +117,9 @@ $("#selectSort").change(function () {
 });
 
 $(".subject").on("click", function () {
+    /// <summary>
+    /// 
+    /// </summary>
     var selectedSubjectId = $(this).attr("data-subject-id");
     $(".subject").removeClass("text-info");
 
@@ -110,6 +140,10 @@ $(".subject").on("click", function () {
         dataType: "json",
         contentType: "application/json; charset=utf-8",
         success: function (data) {
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="data">The data.</param>
             var rubricsData = "";
             for (var i = 0; i < data.length; i++) {
                 var rubric = data[i];

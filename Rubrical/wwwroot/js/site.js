@@ -1,8 +1,21 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿// ***********************************************************************
+// Assembly         : Rubrical
+// Author           : Admin
+// Created          : 11-15-2019
+//
+// Last Modified By : Admin
+// Last Modified On : 11-15-2019
+// ***********************************************************************
+// <copyright file="site.js" company="Rubrical">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 function decodeHtml(html) {
+    /// <summary>
+    /// Decodes the HTML.
+    /// </summary>
+    /// <param name="html">The HTML.</param>
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
