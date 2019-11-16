@@ -126,9 +126,29 @@ namespace Rubrical.Controllers
                 return Json("No user found");
             }
 
+            foreach (var rubric in await _applicationDbContext.Rubrics.Where(x => x.ApplicationUserId == id).ToListAsync())
+            {
+                var rows = _applicationDbContext.Rows.Where(x => x.RubricId == rubric.Id).ToList();
+               foreach (var row in rows)
+                {
+                    var cell = _applicationDbContext.Cells.Where(x => x.RowId == row.Id).ToList();
+                    _applicationDbContext.Cells.RemoveRange(cell);
+                    _applicationDbContext.SaveChanges();
+
+                    _applicationDbContext.Rows.Remove(row);
+                    _applicationDbContext.SaveChanges();
+                }
+
+                var ratings = _applicationDbContext.Ratings.Where(x => x.RubricId == rubric.Id).ToList();
+                _applicationDbContext.Ratings.RemoveRange(ratings);
+                _applicationDbContext.SaveChanges();
+                _applicationDbContext.Rubrics.Remove(rubric);
+                _applicationDbContext.SaveChanges();
+            }
+
             _applicationDbContext.ApplicationUsers.Remove(user);
 
-            await _applicationDbContext.SaveChangesAsync();
+            _applicationDbContext.SaveChanges();
             return Json("Deleted user.");
         }
     }
