@@ -125,7 +125,7 @@ else
 
 <button type="button" class="btn btn-warning" id="buttonCopy"><i class="fa fa-copy"></i> Copy</button>
 
-@if (User.IsInRole("Admin"))
+@if (User.IsInRole("Admin") && ViewBag.IsOwner == false)
 {
     <button type="button" class="btn btn-danger" id="buttonDelete" style="display: block;">Delete Rubric</button>
 }
