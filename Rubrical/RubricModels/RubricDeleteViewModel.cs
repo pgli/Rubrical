@@ -1,15 +1,15 @@
 ﻿// ***********************************************************************
 // Assembly         : Rubrical
-// Author           : Admin
+// Author           : Petar Gligic
 // Created          : 11-15-2019
 //
-// Last Modified By : Admin
+// Last Modified By : Petar Gligic
 // Last Modified On : 11-15-2019
 // ***********************************************************************
 // <copyright file="RubricDeleteViewModel.cs" company="Rubrical">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c)Rubrical. All rights reserved.
 // </copyright>
-// <summary></summary>
+// <summary>Viewmodel used when deleting a Rubric.</summary>
 // ***********************************************************************
 using System;
 using System.Collections.Generic;

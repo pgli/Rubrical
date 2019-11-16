@@ -1,19 +1,20 @@
 ﻿// ***********************************************************************
 // Assembly         : Rubrical
-// Author           : Admin
+// Author           : Petar Gligic
 // Created          : 11-15-2019
 //
-// Last Modified By : Admin
+// Last Modified By : Petar Gligic
 // Last Modified On : 11-15-2019
 // ***********************************************************************
 // <copyright file="community.js" company="Rubrical">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c)Rubrical. All rights reserved.
 // </copyright>
-// <summary></summary>
+// <summary>Javascript code for the Community Rubrics page.</summary>
 // ***********************************************************************
 $(".grade").on("click", function () {
     /// <summary>
-    /// 
+    /// When a grade is selected, style accordingly then send an
+    /// AJAX request that filters rubrics by the selected/unselected grade.
     /// </summary>
     var selectedGradeId = $(this).attr("data-grade-id");
     $(".grade").removeClass("text-info");
@@ -36,9 +37,9 @@ $(".grade").on("click", function () {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             /// <summary>
-            /// 
+            /// Ajax successful callback
             /// </summary>
-            /// <param name="data">The data.</param>
+            /// <param name="data">Returns a JSON array of filtered rubrics.</param>
             var rubricsData = "";
             for (var i = 0; i < data.length; i++) {
                 var rubric = data[i];
@@ -71,7 +72,8 @@ $(".grade").on("click", function () {
 
 $("#selectSort").change(function () {
     /// <summary>
-    /// 
+    /// When a type of sort is selected from the dropdown, such as Upvote Low-High,
+    /// grab its value and pass it to an AJAX request to sort rubrics by.
     /// </summary>
     var sortType = $("#selectSort option:selected").val();
 
@@ -83,9 +85,9 @@ $("#selectSort").change(function () {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             /// <summary>
-            /// 
+            /// Ajax successful callback
             /// </summary>
-            /// <param name="data">The data.</param>
+            /// <param name="data">Returns a JSON array of sorted rubrics.</param>
             var rubricsData = "";
             for (var i = 0; i < data.length; i++) {
                 var rubric = data[i];
@@ -118,7 +120,8 @@ $("#selectSort").change(function () {
 
 $(".subject").on("click", function () {
     /// <summary>
-    /// 
+    /// When a subject is selected, style accordingly then send an
+    /// AJAX request that filters rubrics by the selected/unselected subject.
     /// </summary>
     var selectedSubjectId = $(this).attr("data-subject-id");
     $(".subject").removeClass("text-info");
@@ -141,9 +144,9 @@ $(".subject").on("click", function () {
         contentType: "application/json; charset=utf-8",
         success: function (data) {
             /// <summary>
-            /// 
+            /// Ajax successful callback
             /// </summary>
-            /// <param name="data">The data.</param>
+            /// <param name="data">Returns a JSON array of filtered rubrics.</param>
             var rubricsData = "";
             for (var i = 0; i < data.length; i++) {
                 var rubric = data[i];

@@ -1,15 +1,15 @@
 ﻿// ***********************************************************************
 // Assembly         : Rubrical
-// Author           : Admin
+// Author           : Petar Gligic
 // Created          : 11-15-2019
 //
-// Last Modified By : Admin
+// Last Modified By : Petar Gligic
 // Last Modified On : 11-15-2019
 // ***********************************************************************
 // <copyright file="HomeController.cs" company="Rubrical">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c)Rubrical. All rights reserved.
 // </copyright>
-// <summary></summary>
+// <summary>Controls the Home page and About page</summary>
 // ***********************************************************************
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

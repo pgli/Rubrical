@@ -1,15 +1,15 @@
 ﻿// ***********************************************************************
 // Assembly         : Rubrical
-// Author           : Admin
+// Author           : Petar Gligic
 // Created          : 11-15-2019
 //
-// Last Modified By : Admin
+// Last Modified By : Petar Gligic
 // Last Modified On : 11-15-2019
 // ***********************************************************************
 // <copyright file="Grade.cs" company="Rubrical">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c)Rubrical. All rights reserved.
 // </copyright>
-// <summary></summary>
+// <summary>A Grade object, containing a grade's name and/or number. Also allows a description. Used for Rubric categorization.</summary>
 // ***********************************************************************
 using System.ComponentModel.DataAnnotations;
 

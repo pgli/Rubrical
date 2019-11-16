@@ -1,19 +1,19 @@
 ﻿// ***********************************************************************
 // Assembly         : Rubrical
-// Author           : Admin
+// Author           : Petar Gligic
 // Created          : 11-15-2019
 //
-// Last Modified By : Admin
+// Last Modified By : Petar Gligic
 // Last Modified On : 11-15-2019
 // ***********************************************************************
 // <copyright file="site.js" company="Rubrical">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c)Rubrical. All rights reserved.
 // </copyright>
-// <summary></summary>
+// <summary>Global javascript code.</summary>
 // ***********************************************************************
 function decodeHtml(html) {
     /// <summary>
-    /// Decodes the HTML.
+    /// Decodes HTML passed to it.
     /// </summary>
     /// <param name="html">The HTML.</param>
     var txt = document.createElement("textarea");
