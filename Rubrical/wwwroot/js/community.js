@@ -49,11 +49,11 @@ $(".grade").on("click", function () {
                     <div class="card border-info">
                         <div class="card-body">
                             <p id="rating">${rubric.totalRating}</p>
-                            <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>
+                            <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.rubricId}" class="text-white">${rubric.title}</a></h5>
                             <sub class="text-light">${rubric.grade.gradeName} ${rubric.subject.subjectName}</sub>
                             <br /><br />
                             <p class="card-text">${desc}</p>
-                            <a href="/Rubric/RubricView?rubricId=${rubric.id}" class="btn btn-primary">View Rubric</a>
+                            <a href="/Rubric/RubricView?rubricId=${rubric.rubricId}" class="btn btn-primary">View Rubric</a>
                             <br /><br />
                             <small class="text-light"><em>Created by ${rubric.userName}</em></small>
                             <br />
@@ -88,6 +88,7 @@ $("#selectSort").change(function () {
             /// Ajax successful callback
             /// </summary>
             /// <param name="data">Returns a JSON array of sorted rubrics.</param>
+            console.log(data);
             var rubricsData = "";
             for (var i = 0; i < data.length; i++) {
                 var rubric = data[i];
@@ -97,11 +98,11 @@ $("#selectSort").change(function () {
                     <div class="card border-info">
                         <div class="card-body">
                             <p id="rating">${rubric.totalRating}</p>
-                            <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>
+                            <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.rubricId}" class="text-white">${rubric.title}</a></h5>
                             <sub class="text-light">${rubric.grade.gradeName} ${rubric.subject.subjectName}</sub>
                             <br /><br />
                             <p class="card-text">${desc}</p>
-                            <a href="/Rubric/RubricView?rubricId=${rubric.id}" class="btn btn-primary">View Rubric</a>
+                            <a href="/Rubric/RubricView?rubricId=${rubric.rubricId}" class="btn btn-primary">View Rubric</a>
                             <br /><br />
                             <small class="text-light"><em>Created by ${rubric.userName}</em></small>
                             <br />
@@ -156,11 +157,11 @@ $(".subject").on("click", function () {
                     <div class="card border-info">
                         <div class="card-body">
                             <p id="rating">${rubric.totalRating}</p>
-                            <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.id}" class="text-white">${rubric.title}</a></h5>
+                            <h5 class="card-title"><a href="/Rubric/RubricView?rubricId=${rubric.rubricId}" class="text-white">${rubric.title}</a></h5>
                             <sub class="text-light">${rubric.grade.gradeName} ${rubric.subject.subjectName}</sub>
                             <br /><br />
                             <p class="card-text">${desc}</p>
-                            <a href="/Rubric/RubricView?rubricId=${rubric.id}" class="btn btn-primary">View Rubric</a>
+                            <a href="/Rubric/RubricView?rubricId=${rubric.rubricId}" class="btn btn-primary">View Rubric</a>
                             <br /><br />
                             <small class="text-light"><em>Created by ${rubric.userName}</em></small>
                             <br />
